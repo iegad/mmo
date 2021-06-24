@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package cgi;
+option go_package = "github.com/iegad/mmo/rings/user/cgi";
+option csharp_namespace = "cgi";
+
+import "user.data.proto";
+
+
+message AddUserInfoReq {
+  data.UserInfo UserInfo = 1;
+}
+
+message AddUserInfoRsp {
+  int32 Code = 1;
+  data.UserInfo UserInfo = 2;
+}
+
+message AddUserListReq {
+  repeated data.UserInfo UserList = 1;
+}
+
+message AdduserListRsp {
+  int32 Code = 1;
+  repeated data.UserInfo UserList = 2;
+}
+
+message ModifyUserInfoReq {
+  data.UserInfo UserInfo = 1;
+}
+
+message ModifyUserInfoRsp {
+  int32 Code = 1;
+  data.UserInfo UserInfo = 2;
+}
+
+message RemoveUserInfoReq {
+  repeated int64 UserIDs = 1;
+}
+
+message RemoveUserInfoRsp {
+  int32 Code = 1;
+  int32 AffectedRows = 2;
+}
+
+message QueryUserInfoReq {
+  int64  UserID        = 1;
+  string Email         = 2;
+  string PhoneNum      = 3;
+  int64  CreateTimeBeg = 4;
+  int64  CreateTimeEnd = 5;
+  int64  LastUpdateBeg = 6;
+  int64  LastUpdateEnd = 7;
+  int64  Offset        = 8;
+  int64  Limit         = 9;
+  string OrderBy       = 10;
+  bool   Desc          = 11;
+}
+
+message QueryUserInfoRsp {
+  int32 Code = 1;
+  repeated data.UserInfo UserList = 2;
+}
+
+message SetUserSessionReq {
+  data.UserSession UserSession = 1;
+}
+
+message SetUserSessionRsp {
+  int32 Code = 1;
+  data.UserSession UserSession = 2;
+}
+
+message GetUserSessionReq {
+  int64 UserID = 1;
+}
+
+message GetUserSessionRsp {
+  int32 Code = 1;
+  data.UserSession UserSession = 2;
+}
+
+message RemoveUserSessionReq {
+  int64 UserID = 1;
+  bytes Token = 2;
+}
+
+message RemoveUserSessionRsp {
+  int32 Code = 1;
+  data.UserSession UserSession = 2;
+}

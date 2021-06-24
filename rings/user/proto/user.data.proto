@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package data;
+option go_package = "github.com/iegad/mmo/rings/user/data";
+option csharp_namespace = "data";
+
+
+// ----------------- 用户信息 -----------------
+message UserInfo {
+  int64  UserID     = 1; // 用户ID
+  string Email      = 2; // EMAIL
+  string PhoneNum   = 3; // 手机号
+  string Nickname   = 4; // 昵称
+  string Avator     = 5; // 头像
+  int64  CreateTime = 6; // 创建时间
+  int64  LastUpdate = 7; // 最后更新时间
+  string Ver        = 8; // 版本
+  uint32  VerCode   = 9; // 版本号
+}
+
+// ----------------- 用户会话 -----------------
+message UserSession {
+  int32    OSType     = 1;
+  bytes    Token      = 2;
+  bytes    DeviceCode = 3;
+  string   MountAddr  = 4;
+  int64    ActiveTime = 5;
+  UserInfo UserInfo   = 6;
+}
