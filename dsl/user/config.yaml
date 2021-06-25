@@ -1,1 +1,21 @@
 server:
+  host: ":10000"
+  maxConn: 1000
+  protocol: "tcp"
+  project: "mmorpg"
+  service: "userService"
+
+etcd:
+  hosts:
+  - 127.0.0.1:2379
+
+redis:
+  hosts:
+  - 127.0.0.1:6379
+
+mysql:
+  addr: 127.0.0.1
+  port: 3306
+  user: root
+  pass: 123456
+  database: DB_BASIC

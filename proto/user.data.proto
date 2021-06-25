@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package data;
-option go_package = "github.com/iegad/mmo/rings/user/data";
+option go_package = "github.com/iegad/mmo/data";
 option csharp_namespace = "data";
 
 

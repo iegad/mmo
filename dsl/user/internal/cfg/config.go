@@ -7,6 +7,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const FILE = "config.yaml"
+
 var Instance *config
 
 type config struct {
@@ -17,7 +19,7 @@ type config struct {
 }
 
 func Init(fname ...string) error {
-	file := "config.yaml"
+	file := FILE
 	if len(fname) > 0 && len(fname[0]) > 0 {
 		file = fname[0]
 	}
@@ -28,13 +30,31 @@ func Init(fname ...string) error {
 	}
 
 	c := &config{}
-
 	err = yaml.Unmarshal(data, c)
 	if err != nil {
 		return err
 	}
 
-	Instance = c
+	err = conf.CheckServer(c.Server)
+	if err != nil {
+		return err
+	}
 
+	err = conf.CheckEtcd(c.Etcd)
+	if err != nil {
+		return err
+	}
+
+	err = conf.CheckMySql(c.MySql)
+	if err != nil {
+		return err
+	}
+
+	err = conf.CheckRedis(c.Redis)
+	if err != nil {
+		return err
+	}
+
+	Instance = c
 	return nil
 }

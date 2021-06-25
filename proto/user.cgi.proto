@@ -1,12 +1,12 @@
 syntax = "proto3";
 
 package cgi;
-option go_package = "github.com/iegad/mmo/rings/user/cgi";
+option go_package = "github.com/iegad/mmo/cgi";
 option csharp_namespace = "cgi";
 
 import "user.data.proto";
 
-
+// ------------------ 添加用户信息 ------------------
 message AddUserInfoReq {
   data.UserInfo UserInfo = 1;
 }
@@ -16,6 +16,7 @@ message AddUserInfoRsp {
   data.UserInfo UserInfo = 2;
 }
 
+// ------------------ 批量添加用户信息 ------------------
 message AddUserListReq {
   repeated data.UserInfo UserList = 1;
 }
@@ -25,6 +26,7 @@ message AdduserListRsp {
   repeated data.UserInfo UserList = 2;
 }
 
+// ------------------ 修改用户信息 ------------------
 message ModifyUserInfoReq {
   data.UserInfo UserInfo = 1;
 }
@@ -34,6 +36,7 @@ message ModifyUserInfoRsp {
   data.UserInfo UserInfo = 2;
 }
 
+// ------------------ 移除用户信息 ------------------
 message RemoveUserInfoReq {
   repeated int64 UserIDs = 1;
 }
@@ -43,6 +46,7 @@ message RemoveUserInfoRsp {
   int32 AffectedRows = 2;
 }
 
+// ------------------ 查询用户信息 ------------------
 message QueryUserInfoReq {
   int64  UserID        = 1;
   string Email         = 2;
@@ -62,6 +66,16 @@ message QueryUserInfoRsp {
   repeated data.UserInfo UserList = 2;
 }
 
+// ------------------ 判断用户是否存在 ------------------
+message ExistsUserInfoReq {
+  int64 UserID = 1;
+}
+
+message ExistsUserInfoRsp {
+  int32 Code = 1;
+}
+
+// ------------------ 设置用户会话 ------------------
 message SetUserSessionReq {
   data.UserSession UserSession = 1;
 }
@@ -71,6 +85,7 @@ message SetUserSessionRsp {
   data.UserSession UserSession = 2;
 }
 
+// ------------------ 获取用户会话 ------------------
 message GetUserSessionReq {
   int64 UserID = 1;
 }
@@ -80,6 +95,7 @@ message GetUserSessionRsp {
   data.UserSession UserSession = 2;
 }
 
+// ------------------ 移除用户会话 ------------------
 message RemoveUserSessionReq {
   int64 UserID = 1;
   bytes Token = 2;
