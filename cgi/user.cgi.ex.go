@@ -1,6 +1,10 @@
 package cgi
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/iegad/mmo/data"
+)
 
 var poolAddUserInfoReq = sync.Pool{
 	New: func() interface{} {
@@ -13,6 +17,10 @@ func NewAddUserInfoReq() *AddUserInfoReq {
 }
 
 func DeleteAddUserInfoReq(obj *AddUserInfoReq) {
+	if obj != nil {
+		data.DeleteUserInfo(obj.UserInfo)
+	}
+
 	poolAddUserInfoReq.Put(obj)
 }
 
@@ -27,6 +35,10 @@ func NewAddUserInfoRsp() *AddUserInfoRsp {
 }
 
 func DeleteAddUserInfoRsp(obj *AddUserInfoRsp) {
+	if obj != nil {
+		data.DeleteUserInfo(obj.UserInfo)
+	}
+
 	poolAddUserInfoRsp.Put(obj)
 }
 
