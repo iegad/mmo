@@ -11,30 +11,16 @@ import (
 	"github.com/iegad/hydra/pb"
 	"github.com/iegad/kraken/security"
 	"github.com/iegad/kraken/utils"
+	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/data"
 )
 
-const (
-	TUserInfo = "T_USER_INFO"
-)
-
 var (
-	tUserInfoKey      []byte
-	tUserInfoFieldMap = map[string]string{}
+	tUserInfoKey []byte
 )
 
 func init() {
-	tUserInfoKey = security.MD5(utils.StringToBytes(TUserInfo))
-
-	tUserInfoFieldMap["UserID"] = "F_AID"
-	tUserInfoFieldMap["Email"] = "F_EMAIL"
-	tUserInfoFieldMap["PhoneNum"] = "F_PHONE_NUM"
-	tUserInfoFieldMap["Nickname"] = "F_NICKNAME"
-	tUserInfoFieldMap["Avator"] = "avator"
-	tUserInfoFieldMap["CreateTime"] = "F_CREATE_TIME"
-	tUserInfoFieldMap["LastUpdate"] = "F_LAST_UPDATE"
-	tUserInfoFieldMap["Ver"] = "F_VER"
-	tUserInfoFieldMap["VerCode"] = "F_VER_CODE"
+	tUserInfoKey = security.MD5(utils.StringToBytes(data.TUserInfo))
 }
 
 // AddUserInfo 添加用户
@@ -151,6 +137,9 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 			}
 
 			if affected == 1 {
+				data.DeleteUserInfo(obj)
+				obj = tmp
+				tmp = nil
 				break
 			}
 
@@ -159,7 +148,7 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 	}
 
 	// Step 6: 清理
-	pb.DeleteUserInfo(tmp)
+	data.DeleteUserInfo(tmp)
 
 	if changed && affected != 1 {
 		if err == nil {
@@ -187,7 +176,7 @@ func RemoveUserInfo(userID int64, db *sql.DB) error {
 	return nil
 }
 
-func QueryOneUserInfo(userID int64, db *sql.DB) (*pb.UserInfo, error) {
+func QueryOneUserInfo(userID int64, db *sql.DB) (*data.UserInfo, error) {
 	if userID <= 0 {
 		return nil, ErrUserID
 	}
@@ -197,14 +186,14 @@ func QueryOneUserInfo(userID int64, db *sql.DB) (*pb.UserInfo, error) {
 	}
 
 	var (
-		tmp             = pb.NewUserInfo()
+		tmp             = data.NewUserInfo()
 		email, phoneNum sql.NullString
 	)
 
 	row := db.QueryRow("SELECT F_AID,F_EMAIL,F_PHONE_NUM,F_CREATE_TIME,F_LAST_UPDATE,F_VER,F_VER_CODE FROM `DB_BASIC`.`T_USER_INFO` WHERE F_AID=?", userID)
 	err := row.Scan(&tmp.UserID, &email, &phoneNum, &tmp.CreateTime, &tmp.LastUpdate, &tmp.Ver, &tmp.VerCode)
 	if err != nil {
-		pb.DeleteUserInfo(tmp)
+		data.DeleteUserInfo(tmp)
 		return nil, err
 	}
 
@@ -219,7 +208,7 @@ func QueryOneUserInfo(userID int64, db *sql.DB) (*pb.UserInfo, error) {
 	return tmp, nil
 }
 
-func QueryUserInfo(cond *pb.SearchUserInfoReq, db *sql.DB) ([]*pb.UserInfo, error) {
+func QueryUserInfo(cond *cgi.QueryUserInfoReq, db *sql.DB) ([]*data.UserInfo, error) {
 	if db == nil {
 		return nil, mod.ErrDB
 	}
@@ -289,7 +278,7 @@ func QueryUserInfo(cond *pb.SearchUserInfoReq, db *sql.DB) ([]*pb.UserInfo, erro
 		}
 
 		if len(cond.OrderBy) > 0 {
-			sb.WriteString(fmt.Sprintf(" ORDER BY %s", tUserInfoFieldMap[cond.OrderBy]))
+			sb.WriteString(fmt.Sprintf(" ORDER BY %s", data.TUserInfoFieldMap[cond.OrderBy]))
 			if cond.Desc {
 				sb.WriteString(" DESC")
 			}
@@ -309,13 +298,13 @@ func QueryUserInfo(cond *pb.SearchUserInfoReq, db *sql.DB) ([]*pb.UserInfo, erro
 	}
 
 	var (
-		dataList = []*pb.UserInfo{}
+		dataList = []*data.UserInfo{}
 		email    sql.NullString
 		phoneNum sql.NullString
 	)
 
 	for rows.Next() {
-		item := &pb.UserInfo{}
+		item := data.NewUserInfo()
 		err = rows.Scan(&item.UserID, &email, &phoneNum, &item.CreateTime, &item.LastUpdate, &item.Ver, &item.VerCode)
 		if err != nil {
 			break
@@ -336,7 +325,7 @@ func QueryUserInfo(cond *pb.SearchUserInfoReq, db *sql.DB) ([]*pb.UserInfo, erro
 
 	if err != nil {
 		for i := 0; i < len(dataList); i++ {
-			pb.DeleteUserInfo(dataList[i])
+			data.DeleteUserInfo(dataList[i])
 			dataList[i] = nil
 		}
 
@@ -346,14 +335,14 @@ func QueryUserInfo(cond *pb.SearchUserInfoReq, db *sql.DB) ([]*pb.UserInfo, erro
 	return dataList, nil
 }
 
-func ReleaseUserInfoDataList(dataList []*pb.UserInfo) {
+func ReleaseUserInfoDataList(dataList []*data.UserInfo) {
 	for i := 0; i < len(dataList); i++ {
-		pb.DeleteUserInfo(dataList[i])
+		data.DeleteUserInfo(dataList[i])
 		dataList[i] = nil
 	}
 }
 
-func CountUserInfo(cond *pb.SearchUserInfoReq, db *sql.DB) (int64, error) {
+func CountUserInfo(cond *cgi.QueryUserInfoReq, db *sql.DB) (int64, error) {
 	if db == nil {
 		return -1, mod.ErrDB
 	}

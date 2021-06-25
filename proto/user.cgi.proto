@@ -63,7 +63,8 @@ message QueryUserInfoReq {
 
 message QueryUserInfoRsp {
   int32 Code = 1;
-  repeated data.UserInfo UserList = 2;
+  int64 Total = 2;
+  repeated data.UserInfo UserList = 3;
 }
 
 // ------------------ 判断用户是否存在 ------------------
