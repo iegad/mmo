@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package cgi;
+option go_package = "github.com/iegad/mmo/cgi";
+option csharp_namespace = "cgi";
+
+import "charactor.data.proto";
+
+// 创建人物
+message AddCharactorReq {
+  data.Charactor Charactor = 1;
+}
+
+message AddCharactorRsp {
+  int32          Code      = 1;
+  data.Charactor Charactor = 2;
+}
+
+// 修改人物
+message ModifyCharactorReq {
+  data.Charactor Charactor = 1;
+}
+
+message ModifyCharactorRsp {
+  int32          Code      = 1;
+  data.Charactor Charactor = 2;
+}
+
+// 获取人物
+message QueryCharactorReq {
+  int64         UserID        = 1;
+  int64         CharID        = 2;
+  string        Nickname      = 3;
+	data.RoleType Role          = 4;
+	int32         Gender        = 5;
+	int64         CreateTimeBeg = 6;
+	int64         CreateTimeEnd = 7;
+	int64         LastUpdateBeg = 8;
+	int64         LastUpdateEnd = 9;
+  int64         Offset        = 10;
+  int64         Limit         = 11;
+  string        OrderBy       = 12;
+  bool          Desc          = 13;
+}
+
+message QueryCharactorRsp {
+  int32                   Code     = 1;
+  repeated data.Charactor DataList = 2;
+  int64                   Total    = 3;
+}
+
+// 移除人物
+message RemoveCharactorReq {
+  int64 UserID = 1;
+  int64 RoleID = 2;
+}
+
+message RemoveCharactorRsp {
+  int32 Code         = 1;
+  int32 AffectedRows = 2;
+}

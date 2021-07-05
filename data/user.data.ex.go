@@ -12,6 +12,7 @@ func init() {
 	TUserInfoFieldMap["UserID"] = "F_AID"
 	TUserInfoFieldMap["Email"] = "F_EMAIL"
 	TUserInfoFieldMap["PhoneNum"] = "F_PHONE_NUM"
+	TUserInfoFieldMap["Gender"] = "F_GENDER"
 	TUserInfoFieldMap["Nickname"] = "F_NICKNAME"
 	TUserInfoFieldMap["Avator"] = "F_AVATOR"
 	TUserInfoFieldMap["CreateTime"] = "F_CREATE_TIME"

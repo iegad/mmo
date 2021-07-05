@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package netpro;
+option go_package = "github.com/iegad/mmo/netpro";
+option csharp_namespace = "netpro";
+
+import "user.data.proto";
+import "charactor.data.proto";
+
+// 获取验证码
+message GetVCodeReq {
+  string PhoneNum = 1;
+  string Email    = 2;
+}
+
+message GetVCodeRsp {
+  int32 Code = 1;
+}
+
+// 注销用户
+message UserUnregistReq {
+  int64  UserID   = 1;
+  string PhoneNum = 2;
+  string Email    = 3;
+  int32  VCode    = 4;
+}
+
+message UserUnregistRsp {
+  int32 Code = 1;
+}
+
+// 用户登录
+message UserLoginReq {
+  string PhoneNum   = 1;
+  string Email      = 2;
+  int32  VCode      = 3;
+  int64  UserID     = 4;
+  bytes  DeviceCode = 5;
+  bytes  Token      = 6;
+  int32  OSType     = 7; // 1:  iOS, 2: android
+}
+
+message UserLoginRsp {
+  int32 Code                   = 1;
+  data.UserInfo    UserInfo    = 2;
+  data.UserSession UserSession = 3;
+}
+
+// 用户登出
+message UserLogoutReq {
+  int64 UserID = 1;
+  bytes Token  = 2;
+}
+
+message UserLogoutRsp {
+  int32 Code = 1;
+}
+
+// 修改用户
+message ModifyUserInfoReq {
+  data.UserInfo UserInfo = 1;
+  bytes         Token    = 2;
+}
+
+message ModifyUserInfoRsp {
+  int32         Code     = 1;
+  data.UserInfo UserInfo = 2;
+}
+
+message SearchUserReq {
+  int64  UserID   = 1;
+  string PhoneNum = 2;
+  string Email    = 3;
+  string Nickname = 4;
+}
+
+message SearchUserRsp {
+  int32         Code     = 1;
+  data.UserInfo DataList = 2;
+}
+
+// 创建游戏人物
+message CreateCharactorReq {
+  bytes          Token     = 1;
+  data.Charactor Charactor = 2;
+}
+
+message CreateCharactorRsp {
+  int32          Code      = 1;
+  data.Charactor Charactor = 2;
+}
+
+// 修改游戏人物
+message ModifyCharactorReq {
+  bytes          Token     = 1;
+  data.Charactor Charactor = 2;
+}
+
+message ModifyCharactorRsp {
+  int32          Code      = 1;
+  data.Charactor Charactor = 2;
+}
+
+// 删除游戏人物
+message RemoveCharactorReq {
+  int64 UserID = 1;
+  int64 CharID = 2;
+  bytes Token  = 3;
+}
+
+message RemoveCharactorRsp {
+  int32 Code = 1;
+}
+
+// 查询游戏人物
+message SearchCharactorReq {
+  int64  UserID        = 1;
+  int64  CharID        = 2;
+  string CharactorName = 3;
+}
+
+message SearchCharactorRsp {
+  int32                   Code     = 1;
+  repeated data.Charactor DataList = 2;
+}

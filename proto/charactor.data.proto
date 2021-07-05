@@ -1,0 +1,175 @@
+syntax = "proto3";
+
+package data;
+option go_package = "github.com/iegad/mmo/data";
+option csharp_namespace = "data";
+
+// ----------------- 职业 -----------------
+enum RoleType {
+  RoleTypeInvalid  = 0;
+  RoleTypeWarrior  = 1; // 战士, TANK, 近战
+  RoleTypeStriker  = 2; // 射手, 远程物理 弓 + 弩
+  RoleTypeAssassin = 3; // 刺客, 近战 + 陷阱
+  RoleTypeMage     = 4; // 法师, 远程法术
+  RoleTypeWarlock  = 5; // 术士, 召唤 + 控制
+}
+
+// ----------------- 护甲类型 -----------------
+enum ArmorType {
+  ArmorTypeInvalid   = 0;
+  ArmorTypePlate     = 1; // 板甲
+  ArmorTypeMail      = 2; // 锁甲
+  ArmorTypeLeather   = 3; // 皮甲
+  ArmorTypeCloth     = 4; // 布甲
+  ArmorTypeUnarmored = 5; // 无甲
+}
+
+// ----------------- 武器类型 -----------------
+enum WeaponType {
+  WeaponTypeInvalid = 0;
+}
+
+// ----------------- 人物基础信息 -----------------
+message CharactorBasicInfo {
+  string   Nickname  = 1; // 昵称
+  RoleType Role      = 2; // 职业
+  uint32   Gender    = 3; // 性别
+  uint32   HairStyle = 4; // 发型
+  uint32   HairColor = 5; // 发色
+  uint32   Height    = 6; // 身高
+  uint32   BodyType  = 7; // 体型
+  uint32   SkinColor = 8; // 肤色
+}
+
+// ----------------- 人物基础属性 -----------------
+// 人物基础属性是不会变更的, 该数据将持久化存储.
+message CharactorBasicAttribute {
+  // ----- @经验值 ----
+  // 由打怪或任务获得.
+  // 升级时需要消耗经验值.
+  double EXP = 1;
+
+  // ----- @等级 -----
+  //  每升一级提供 5点基础属性点, 可以自行分配到 力量,敏捷, 体力或智力上
+  float LEV = 2;
+
+  // ----- @耐力 -----
+  //  每日的行动力, 耐力决定人物的状态,
+  //  当耐力下降到一定程度的值时, 人物各项属性会按比例下降
+  //  耐力值固定为100, 满级之后到达120
+  //  无法通过提升等级增加耐力
+  float STA = 3;
+
+  // ----- @力量 -----
+  //  增加近战/穿刺伤害,命中,招架
+  //  力量是使用装备的条件
+  //  等级提升时会跟据职业提升相应力量值
+  float STR = 4;
+
+  // ----- @敏捷 -----
+  //  增加爆击率,爆击伤害,闪躲,急速
+  //  敏捷是使用装备的条件
+  //  等级提升时会跟据职业提升相应敏捷值
+  float AGI = 5;
+
+  // ----- @体力 -----
+  //  增加生命值和韧性
+  //  等级提升时会跟据职业提升相应体力值
+  float CON = 6;
+
+  // ----- @智力 -----
+  //  增加法力值, 火焰伤害, 冰霜伤害, 闪电伤害, 毒素伤害和暗影伤害
+  //  等级提升时会跟据职业提升相应智力值
+  float INT = 7;
+
+  // ----- @幸运 -----
+  //  增加爆击率和命中率
+  //  可以让伤害变为混沌伤害
+  //  同时增加高级物品掉落
+  //  默认为0, 可以通过技能或消耗品提升幸运
+  float LCK = 8;
+
+  // ----- @移动速度 -----
+  //  默认为 100
+  //  通过装备,技能或消耗品提升移动速度
+  float SP = 9;
+}
+
+// ----------------- 人物状态属性 -----------------
+message CharactorStateAttribute {
+  // ----- @生命值 -----
+  //  当生命值小于等于 0时, 宣布人物死亡
+  //  通过基础能力点, 天赋, 装备, 技能, 消耗品提升
+  float HP = 1; 
+
+  // ----- @法力值 -----
+  //  法师和术士 拥有法力值
+  //  用于施放法术
+  //  通过基础能力点, 天赋, 装备, 技能, 消耗品提升
+  float MP = 2;
+
+  // ----- @能量值 -----
+  //  射手和刺客拥有能量值
+  //  用于施放技能
+  //  通过天赋提升
+  //  默认100, 通过天赋可以最高提升至150
+  float EP = 3;
+
+  // ----- @怒气值 -----
+  //  战士拥有怒气值
+  //  用于施放持能
+  //  通过天赋提升, 
+  //  战斗中受到伤害将提升
+  //  默认值100, 通过天赋可以最高提升到125
+  float AP = 4;
+}
+
+// ----------------- 人物攻击属性 -----------------
+message CharactorAttackAttribute {
+  float Normal               = 1;  // 物理攻击
+  float Piercing             = 2;  // 穿刺伤害
+  float Flame                = 3;  // 火焰伤害
+  float Frost                = 4;  // 冰霜伤害
+  float Lightning            = 5;  // 闪电伤害
+  float Poison               = 6;  // 毒素伤害
+  float Shadow               = 7;  // 暗影伤害
+  float Chaos                = 8;  // 混沌伤害
+  float ArmorPenetration     = 9;  // 护甲穿透
+  float CriticalStrikeRating = 10; // 暴击率
+  float CriticalStrike       = 11; // 暴击伤害
+  float HitRating            = 12; // 命中率
+  float HasteRation          = 13; // 急速
+  float NormalRange          = 14; // 普攻范围
+  float PiercingRange        = 15; // 穿刺范围
+}
+
+// ----------------- 人物抵抗属性 -----------------
+message CharactorResistanceAttribute {
+  ArmorType Armor      = 1;  // 护甲类型
+  float     Defence    = 2;  // 防御力
+  float     Flame      = 3;  // 火焰抵抗
+  float     Frost      = 4;  // 冰霜抵抗
+  float     Lightning  = 5;  // 闪电抵抗
+  float     Poison     = 6;  // 毒素抵抗
+  float     Shadow     = 7;  // 暗影抵抗
+  float     Chaos      = 8;  // 混沌抵抗
+  float     Dodge      = 9;  // 闪躲
+  float     Resilience = 10; // 韧性
+  float     Block      = 11; // 格挡
+  float     Parry      = 12; // 招架
+}
+
+// ----------------- 人物御属性 -----------------
+message Charactor {
+  int64                        CharID     = 1;  // 角色ID
+  int64                        UserID     = 2;  // 所属用户
+  int64                        CreateTime = 3;  // 创建时间
+  int64                        LastUpdate = 4;  // 最后更新时间
+  string                       Ver        = 5;  // 版本
+  uint32                       VerCode    = 6;  // 版本号
+  CharactorBasicInfo           Info       = 7;  // 基础信息
+  CharactorBasicAttribute      Basic      = 8;  // 基础属性
+  CharactorStateAttribute      State      = 9;  // 状态属性
+  CharactorAttackAttribute     Attack     = 10; // 攻击属性
+  CharactorResistanceAttribute Resistance = 11; // 防御属性
+}
