@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/iegad/kraken/conf"
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/piper"
 	"github.com/iegad/mmo/dsl/user/internal/cfg"
@@ -13,12 +14,11 @@ import (
 )
 
 func main() {
-	root, err := os.Getwd()
+	fname, err := conf.DefaultFile()
 	if err != nil {
-		log.Fatal("获取当前路径失败: %v", err)
+		log.Fatal("获取配置文件失败: %v", err)
 	}
 
-	fname := root + "/" + cfg.FILE
 	err = cfg.Init(fname)
 	if err != nil {
 		log.Fatal("加载配置失败: %v", err)

@@ -8,8 +8,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const FILE = "config.yaml"
-
 var Instance *config
 
 type config struct {
@@ -19,13 +17,8 @@ type config struct {
 	MySql  *conf.MySql  `json:"mysql"  yaml:"mysql"`
 }
 
-func Init(fname ...string) error {
-	file := FILE
-	if len(fname) > 0 && len(fname[0]) > 0 {
-		file = fname[0]
-	}
-
-	data, err := os.ReadFile(file)
+func Init(fname string) error {
+	data, err := os.ReadFile(fname)
 	if err != nil {
 		return err
 	}
@@ -63,7 +56,7 @@ func Init(fname ...string) error {
 			return err
 		}
 
-		err = os.WriteFile(file, out, 0755)
+		err = os.WriteFile(fname, out, 0755)
 		if err != nil {
 			return err
 		}
