@@ -1,21 +1,26 @@
 server:
-  host: ":10000"
-  maxConn: 1000
-  protocol: "tcp"
-  project: "mmorpg"
-  service: "userService"
-
-etcd:
-  hosts:
-  - 127.0.0.1:2379
-
+    maxConn: 1000
+    timeout: 0
+    host: :10000
+    protocol: tcp
+    project: mmorpg
+    service: userService
+    id: 95ece4b9-64da-4936-a027-8ad3a0373120
+    logPath: ""
 redis:
-  hosts:
-  - 127.0.0.1:6379
-
+    db: 0
+    user: ""
+    pass: ""
+    hosts:
+        - 127.0.0.1:6379
+etcd:
+    user: ""
+    pass: ""
+    hosts:
+        - 127.0.0.1:2379
 mysql:
-  addr: 127.0.0.1
-  port: 3306
-  user: root
-  pass: 123456
-  database: DB_BASIC
+    port: 3306
+    addr: 127.0.0.1
+    user: root
+    pass: "123456"
+    database: DB_BASIC

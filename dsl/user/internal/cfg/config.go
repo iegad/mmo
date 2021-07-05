@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/iegad/kraken/conf"
+	"github.com/iegad/kraken/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -53,6 +54,19 @@ func Init(fname ...string) error {
 	err = conf.CheckRedis(c.Redis)
 	if err != nil {
 		return err
+	}
+
+	if len(c.Server.ID) == 0 {
+		c.Server.ID = utils.UUID_String()
+		out, err := yaml.Marshal(c)
+		if err != nil {
+			return err
+		}
+
+		err = os.WriteFile(file, out, 0755)
+		if err != nil {
+			return err
+		}
 	}
 
 	Instance = c

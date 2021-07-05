@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iegad/hydra/mod"
-	"github.com/iegad/hydra/pb"
 	"github.com/iegad/kraken/security"
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/cgi"
@@ -26,23 +24,24 @@ func init() {
 // AddUserInfo 添加用户
 func AddUserInfo(obj *data.UserInfo, db *sql.DB) error {
 	if obj == nil {
-		return ErrObj
+		return cgi.ErrObj
 	}
 
 	if db == nil {
-		return ErrDB
+		return cgi.ErrDB
 	}
 
 	if len(obj.Email) == 0 && len(obj.PhoneNum) == 0 {
-		return ErrAccount
+		return cgi.ErrAccount
 	}
 
-	if obj.CreateTime == 0 {
-		obj.CreateTime = time.Now().Unix()
+	if obj.Gender <= 0 || obj.Gender > 3 {
+		return cgi.ErrGender
 	}
 
-	res, err := db.Exec("INSERT INTO `DB_BASIC`.`T_USER_INFO`(F_EMAIL,F_PHONE_NUM,F_CREATE_TIME,F_VER) VALUES (?,?,?,'')",
-		*utils.IF_STR_EMPTY(obj.Email), *utils.IF_STR_EMPTY(obj.PhoneNum), obj.CreateTime)
+	obj.CreateTime = time.Now().Unix()
+	res, err := db.Exec("INSERT INTO `DB_BASIC`.`T_USER_INFO`(F_EMAIL,F_PHONE_NUM,F_GENDER,F_CREATE_TIME,F_VER) VALUES (?,?,?,?,'')",
+		*utils.IF_STR_EMPTY(obj.Email), *utils.IF_STR_EMPTY(obj.PhoneNum), obj.Gender, obj.CreateTime)
 	if err != nil {
 		return err
 	}
@@ -55,15 +54,15 @@ func AddUserInfo(obj *data.UserInfo, db *sql.DB) error {
 func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 	// Step 1: 入参检查
 	if obj == nil {
-		return ErrObj
+		return cgi.ErrObj
 	}
 
 	if db == nil {
-		return ErrDB
+		return cgi.ErrDB
 	}
 
 	if obj.UserID <= 0 {
-		return ErrUserID
+		return cgi.ErrUserID
 	}
 
 	var (
@@ -74,13 +73,13 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 		encode          []byte
 		email, phoneNum sql.NullString
 		tmp             = data.NewUserInfo()
-		row             = db.QueryRow("SELECT F_AID,F_EMAIL,F_PHONE_NUM,F_CREATE_TIME,F_LAST_UPDATE,F_VER_CODE FROM `DB_BASIC`.`T_USER_INFO` WHERE F_AID=?", obj.UserID)
+		row             = db.QueryRow("SELECT F_AID,F_EMAIL,F_PHONE_NUM,F_GENDER,F_CREATE_TIME,F_LAST_UPDATE,F_VER_CODE FROM `DB_BASIC`.`T_USER_INFO` WHERE F_AID=?", obj.UserID)
 	)
 
 	for dwf := true; dwf; dwf = false {
 		for i := 0; i < 3; i++ {
 			// Step 2: 获取原始版本
-			err = row.Scan(&tmp.UserID, &email, &phoneNum, &tmp.CreateTime, &tmp.LastUpdate, &vcode)
+			err = row.Scan(&tmp.UserID, &email, &phoneNum, &tmp.Gender, &tmp.CreateTime, &tmp.LastUpdate, &vcode)
 			if err != nil {
 				break
 			}
@@ -94,7 +93,7 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 			}
 
 			// Step 3: 备份原始版本
-			encode, err = security.AES128Encode(pb.ToBytes(tmp), tUserInfoKey)
+			encode, err = security.AES128Encode(utils.PbToBytes(tmp), tUserInfoKey)
 			if err != nil {
 				break
 			}
@@ -105,6 +104,11 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 			// Step 4: 赋值
 			if len(obj.Email) > 0 && obj.Email != tmp.Email {
 				tmp.Email = obj.Email
+				changed = true
+			}
+
+			if obj.Gender > 0 && obj.Gender <= 3 {
+				tmp.Gender = obj.Gender
 				changed = true
 			}
 
@@ -125,8 +129,8 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 			tmp.LastUpdate = time.Now().Unix()
 
 			// Step 5: 更新DB
-			res, err := db.Exec("UPDATE `DB_BASIC`.`T_USER_INFO` SET F_EMAIL=?,F_PHONE_NUM=?,F_NICKNAME=?,F_AVATOR=?,F_LAST_UPDATE=?,F_VER=?,F_VER_CODE=? WHERE F_AID=? AND F_VER_CODE=?",
-				utils.IF_STR_EMPTY(tmp.Email), utils.IF_STR_EMPTY(tmp.PhoneNum), tmp.Nickname, tmp.Avator, tmp.LastUpdate, tmp.Ver, tmp.VerCode, tmp.UserID, vcode)
+			res, err := db.Exec("UPDATE `DB_BASIC`.`T_USER_INFO` SET F_EMAIL=?,F_PHONE_NUM=?,F_GENDER=?,F_NICKNAME=?,F_AVATOR=?,F_LAST_UPDATE=?,F_VER=?,F_VER_CODE=? WHERE F_AID=? AND F_VER_CODE=?",
+				utils.IF_STR_EMPTY(tmp.Email), utils.IF_STR_EMPTY(tmp.PhoneNum), tmp.Gender, tmp.Nickname, tmp.Avator, tmp.LastUpdate, tmp.Ver, tmp.VerCode, tmp.UserID, vcode)
 			if err != nil {
 				return err
 			}
@@ -152,7 +156,7 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 
 	if changed && affected != 1 {
 		if err == nil {
-			err = mod.ErrTimeout
+			err = cgi.ErrTimeout
 		}
 	}
 
@@ -161,11 +165,11 @@ func ModifyUserInfo(obj *data.UserInfo, db *sql.DB) error {
 
 func RemoveUserInfo(userID int64, db *sql.DB) error {
 	if userID <= 0 {
-		return ErrUserID
+		return cgi.ErrUserID
 	}
 
 	if db == nil {
-		return mod.ErrDB
+		return cgi.ErrDB
 	}
 
 	_, err := db.Exec("DELETE FROM `DB_BASIC`.`T_USER_INFO` WHERE F_AID=?", userID)
@@ -178,11 +182,11 @@ func RemoveUserInfo(userID int64, db *sql.DB) error {
 
 func QueryOneUserInfo(userID int64, db *sql.DB) (*data.UserInfo, error) {
 	if userID <= 0 {
-		return nil, ErrUserID
+		return nil, cgi.ErrUserID
 	}
 
 	if db == nil {
-		return nil, mod.ErrDB
+		return nil, cgi.ErrDB
 	}
 
 	var (
@@ -190,8 +194,8 @@ func QueryOneUserInfo(userID int64, db *sql.DB) (*data.UserInfo, error) {
 		email, phoneNum sql.NullString
 	)
 
-	row := db.QueryRow("SELECT F_AID,F_EMAIL,F_PHONE_NUM,F_CREATE_TIME,F_LAST_UPDATE,F_VER,F_VER_CODE FROM `DB_BASIC`.`T_USER_INFO` WHERE F_AID=?", userID)
-	err := row.Scan(&tmp.UserID, &email, &phoneNum, &tmp.CreateTime, &tmp.LastUpdate, &tmp.Ver, &tmp.VerCode)
+	row := db.QueryRow("SELECT F_AID,F_EMAIL,F_PHONE_NUM,F_GENDER,F_CREATE_TIME,F_LAST_UPDATE,F_VER,F_VER_CODE FROM `DB_BASIC`.`T_USER_INFO` WHERE F_AID=?", userID)
+	err := row.Scan(&tmp.UserID, &email, &phoneNum, &tmp.Gender, &tmp.CreateTime, &tmp.LastUpdate, &tmp.Ver, &tmp.VerCode)
 	if err != nil {
 		data.DeleteUserInfo(tmp)
 		return nil, err
@@ -210,7 +214,7 @@ func QueryOneUserInfo(userID int64, db *sql.DB) (*data.UserInfo, error) {
 
 func QueryUserInfo(cond *cgi.QueryUserInfoReq, db *sql.DB) ([]*data.UserInfo, error) {
 	if db == nil {
-		return nil, mod.ErrDB
+		return nil, cgi.ErrDB
 	}
 
 	sb := &strings.Builder{}
@@ -237,6 +241,15 @@ func QueryUserInfo(cond *cgi.QueryUserInfoReq, db *sql.DB) ([]*data.UserInfo, er
 				sb.WriteString(fmt.Sprintf(" AND F_PHONE_NUM='%s'", cond.PhoneNum))
 			} else {
 				sb.WriteString(fmt.Sprintf(" WHERE F_PHONE_NUM='%s'", cond.PhoneNum))
+				wa = true
+			}
+		}
+
+		if cond.Gender > 0 {
+			if wa {
+				sb.WriteString(fmt.Sprintf(" ND F_GENDER=%d", cond.Gender))
+			} else {
+				sb.WriteString(fmt.Sprintf(" WHERE F_GENDER=%d", cond.Gender))
 				wa = true
 			}
 		}
@@ -344,7 +357,7 @@ func ReleaseUserInfoDataList(dataList []*data.UserInfo) {
 
 func CountUserInfo(cond *cgi.QueryUserInfoReq, db *sql.DB) (int64, error) {
 	if db == nil {
-		return -1, mod.ErrDB
+		return -1, cgi.ErrDB
 	}
 
 	sb := &strings.Builder{}
@@ -371,6 +384,15 @@ func CountUserInfo(cond *cgi.QueryUserInfoReq, db *sql.DB) (int64, error) {
 				sb.WriteString(fmt.Sprintf(" AND F_PHONE_NUM='%s'", cond.PhoneNum))
 			} else {
 				sb.WriteString(fmt.Sprintf(" WHERE F_PHONE_NUM='%s'", cond.PhoneNum))
+				wa = true
+			}
+		}
+
+		if cond.Gender > 0 {
+			if wa {
+				sb.WriteString(fmt.Sprintf(" ND F_GENDER=%d", cond.Gender))
+			} else {
+				sb.WriteString(fmt.Sprintf(" WHERE F_GENDER=%d", cond.Gender))
 				wa = true
 			}
 		}
