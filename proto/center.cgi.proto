@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package netpro;
-option go_package = "github.com/iegad/mmo/netpro";
-option csharp_namespace = "netpro";
+package cgi;
+option go_package = "github.com/iegad/mmo/cgi";
+option csharp_namespace = "cgi";
 
 import "user.data.proto";
 import "charactor.data.proto";
