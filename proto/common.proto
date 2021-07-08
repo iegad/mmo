@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package common;
+option go_package = "github.com/iegad/mmo/ds";
+
+enum OSType {
+  OSType_Invalid = 0;
+  OSType_IOS     = 1; // IOS
+  OSType_Andriod = 2; // 安卓
+  OSType_Win     = 3; // windows
+  OSType_Mac     = 4; // mac os
+  OSType_Linux   = 5; // linux
+}

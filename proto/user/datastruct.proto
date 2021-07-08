@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package user;
+option go_package = "github.com/iegad/mmo/ds/user";
+option csharp_namespace = "user";
+
+import "common.proto";
+
+// 用户条目
+//  存放于ES中, 用于快速检索用户
+//  @相关操作: 增,删,改,查,计数
+message Entry {
+  int32  Gender   = 1; // 性别
+  int64  UserID   = 2; // 用户ID
+  string Email    = 3; // 邮箱
+  string Nickname = 4; // 昵称
+  string PhoneNum = 5; // 手机号
+  string Avator   = 6; // 头像
+}
+
+// 用户基础信息
+//  存放于MYSQL
+//  @相关操作: 增,删,改,查,计数
+message Basic {
+  uint32 VerCode    = 1; // 版本号
+  int64  CreateTime = 2; // 创建时间
+  int64  LastUpdate = 3; // 最后更新时间
+  Entry  Entry      = 4; // 条目信息
+}
+
+// 用户个人信息
+//  存放于MySQL
+message Personal {
+  int32  Nationality = 1; // 国籍
+  int32  Gender      = 2; // 性别
+  uint32 VerCode     = 3; // 版本号
+  int64  UserID      = 4; // 用户ID
+  int64  Birth       = 5; // 出生
+  string Name        = 6; // 姓名
+  string ID          = 7; // 身份证号
+}
+
+// 用户会话
+//  存放于Redis中
+//  @相关操作: SET, DEL, GET
+message Session {
+  common.OSType OS         = 1; // 操作系统
+  int64         ActiveTime = 2; // 会话激活时间
+  bytes         Token      = 3; // 令牌
+  bytes         DeviceCode = 4; // 设备编码: md5(deviceType:operatingSystem:deviceUniqueIdentifier:macAddr)
+  string        MountAddr  = 5; // 登录网关(挂载点)地址
+  Entry         Entry      = 6; // 用户信息
+}
+
+// 用户关系
+message Relation {
+  int64 CreateTime = 1; // 关系确定时间
+  Entry Entry      = 2; // 用户条目
+}
+
+// 用户关系信息
+//  存放于Mongo
+message Contact {
+  int64             UserID         = 1; // 用户ID
+  repeated Relation ContactList    = 2; // 联系人
+  repeated Relation BlackList      = 3; // 黑名单
+  repeated Relation FansList       = 4; // 粉丝
+  repeated Relation SubscriberList = 5; // 订阅
+}
+
+// 登录日志
+//  存放于ES
+message LoginLog {
+  common.OSType OSType                 = 1;  // 系统类型
+  int64         UserID                 = 2;  // 用户ID
+  int64         LoginTime              = 3;  // 登录时间
+  bytes         Token                  = 4;  // 令牌
+  int32         DeviceType             = 5;  // 设备类型
+  string        OperatingSystem        = 6;  // 操作系统
+  string        DeviceUniqueIdentifier = 7;  // 唯一码
+  bytes         MacAddr                = 8;  // MAC地址
+  string        MountAddr              = 9;  // 挂载点
+  Entry         Entry                  = 10; // 用户条目信息
+}
+
+enum ArchiveLogType {
+  ArchiveLogType_Invalid  = 0;
+  ArchiveLogType_Basic    = 1; // 条目信息修改
+  ArchiveLogType_Personal = 2; // 个人信息修改
+}
+
+// 存档日志
+//  存放于ES, 当数据修改后需要存档原始部分
+message ArchiveLog {
+  ArchiveLogType  Type        = 1; // 存档类型
+  uint32          VerCode     = 2; // 版本号
+  int64           UserID      = 3; // 用户ID
+  int64           ArchiveTime = 4; // 存档时间
+  bytes           Raw         = 5; // 原始数据
+  bytes           Changed     = 6; // 修改后的数据
+}
