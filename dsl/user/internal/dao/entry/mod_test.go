@@ -15,8 +15,8 @@ func TestMod(t *testing.T) {
 	}
 
 	entry := user.NewEntry()
-	entry.UserID = 1
-	entry.Nickname = "iegad"
+	entry.UserID = 4
+	entry.PhoneNum = "123456789"
 	err = ModEntry(entry, es)
 	if err != nil {
 		t.Error(err)

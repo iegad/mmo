@@ -5,39 +5,12 @@ option go_package = "github.com/iegad/mmo/cgi/user";
 
 import "user/datastruct.proto";
 
-message AddEntryReq {
-  user.Entry EntryList = 1;
-}
-
-message AddEntryRsp {
-  int32      Code      = 1;
-  user.Entry EntryList = 2;
-}
-
-message ModEntryReq {
-  user.Entry Entry = 1;
-}
-
-message ModEntryRsp {
-  int32      Code  = 1;
-  user.Entry Entry = 2;
-}
-
-message RmvEntryReq {
-  int64 UserID = 1;
-}
-
-message RmvEntryRsp {
-  int32      Code  = 1;
-  user.Entry Entry = 2;
-}
-
 message GetEntryReq {
-  int64  UserID = 1;
-  int32  Gender = 2;
-  string Key    = 3;
-  int64  Offset = 4;
-  int64  Limit  = 5;
+  int64  UserID  = 1;
+  int32  Gender  = 2;
+  string Key     = 3;
+  int64  Offset  = 4;
+  int64  Limit   = 5;
 }
 
 message GetEntryRsp {

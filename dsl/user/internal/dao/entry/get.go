@@ -4,7 +4,9 @@ import (
 	"context"
 	"reflect"
 
+	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/utils"
+	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/cgi/user"
 	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/dao"
@@ -32,13 +34,13 @@ func GetEntry(cond *Condition, es *elastic.Client) ([]*ds.Entry, int64, error) {
 	if len(cond.Key) > 0 {
 		or := elastic.NewBoolQuery()
 		or.Should(elastic.NewMatchPhrasePrefixQuery("Nickname", cond.Key))
-		or.Should(elastic.NewMatchPhrasePrefixQuery("PhoneNum", cond.Key))
-		or.Should(elastic.NewMatchPhrasePrefixQuery("Email", cond.Key))
+		or.Should(elastic.NewMatchPhrasePrefixQuery("PhoneNum", dao.EncodePhoneNum(cond.Key)))
+		or.Should(elastic.NewMatchPhrasePrefixQuery("Email", dao.EncodeEmail(cond.Key)))
 
 		query = query.Must(or)
 	}
 
-	search := es.Search().Index(dao.ES_INDEX).Query(query)
+	search := es.Search().Index(dao.N_USER_ENTRY).Query(query)
 	if cond.Limit > 0 {
 		search = search.From(int(cond.Offset)).Size(int(cond.Limit))
 	}
@@ -57,4 +59,30 @@ func GetEntry(cond *Condition, es *elastic.Client) ([]*ds.Entry, int64, error) {
 	}
 
 	return dataList, result.TotalHits(), nil
+}
+
+func GetEntryByID(userID int64, es *elastic.Client) (*ds.Entry, error) {
+	utils.Assert(userID > 0 && es != nil, "GetEntryByID in params is invalid")
+
+	res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("UserID", dao.IDToString(userID))).Do(context.TODO())
+	if err != nil {
+		log.Error(err)
+		return nil, cgi.ErrESInner
+	}
+
+	if res.TotalHits() != 1 {
+		return nil, cgi.ErrUserID
+	}
+
+	var (
+		list      = res.Each(refType)
+		entry, ok = list[0].(*ds.Entry)
+	)
+
+	if !ok {
+		log.Error("user_entry type is invalid")
+		return nil, cgi.ErrESInner
+	}
+
+	return entry, nil
 }

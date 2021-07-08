@@ -5,6 +5,7 @@ import (
 
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/ds/user"
+	"github.com/iegad/mmo/dsl/user/internal/dao"
 	"github.com/olivere/elastic/v7"
 )
 
@@ -31,5 +32,6 @@ func TestAdd(t *testing.T) {
 		return
 	}
 
+	entry.PhoneNum = dao.DecodePhoneNum(entry.PhoneNum)
 	t.Log(utils.PbToJson(entry))
 }

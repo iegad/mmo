@@ -2,7 +2,6 @@ package entry
 
 import (
 	"context"
-	"fmt"
 	"unicode/utf8"
 
 	"github.com/iegad/kraken/log"
@@ -36,40 +35,56 @@ func AddEntry(obj *user.Entry, es *elastic.Client) error {
 		return cgi.ErrPhoneNum
 	}
 
-	res, err := es.Search().Index(dao.ES_INDEX).Query(elastic.NewTermQuery("UserID", obj.UserID)).Do(context.TODO())
+	hasIndex, err := es.IndexExists(dao.N_USER_ENTRY).Do(context.TODO())
 	if err != nil {
 		log.Error(err)
 		return cgi.ErrESInner
 	}
 
-	if res.TotalHits() > 0 {
-		return cgi.ErrUserID
-	}
-
-	if len(obj.Email) > 0 {
-		res, err = es.Search().Index(dao.ES_INDEX).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
+	if hasIndex {
+		exists, err := es.Exists().Index(dao.N_USER_ENTRY).Id(dao.IDToString(obj.UserID)).Do(context.TODO())
 		if err != nil {
 			log.Error(err)
 			return cgi.ErrESInner
 		}
 
-		if res.TotalHits() > 0 {
-			return cgi.ErrEmail
+		if exists {
+			return cgi.ErrUserID
+		}
+	}
+
+	if len(obj.Email) > 0 {
+		obj.Email = dao.EncodeEmail(obj.Email)
+
+		if hasIndex {
+			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
+			if err != nil {
+				log.Error(err)
+				return cgi.ErrESInner
+			}
+
+			if res.TotalHits() != 0 {
+				return cgi.ErrEmail
+			}
 		}
 	}
 
 	if len(obj.PhoneNum) > 0 {
-		res, err = es.Search().Index(dao.ES_INDEX).Query(elastic.NewTermQuery("PhoneNum", obj.PhoneNum)).Do(context.TODO())
-		if err != nil {
-			log.Error(err)
-			return cgi.ErrESInner
-		}
+		obj.PhoneNum = dao.EncodePhoneNum(obj.PhoneNum)
 
-		if res.TotalHits() > 0 {
-			return cgi.ErrPhoneNum
+		if hasIndex {
+			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", obj.PhoneNum)).Do(context.TODO())
+			if err != nil {
+				log.Error(err)
+				return cgi.ErrESInner
+			}
+
+			if res.TotalHits() != 0 {
+				return cgi.ErrPhoneNum
+			}
 		}
 	}
 
-	_, err = es.Index().Index(dao.ES_INDEX).Id(fmt.Sprintf("%d", obj.UserID)).BodyJson(obj).Do(context.TODO())
+	_, err = es.Index().Index(dao.N_USER_ENTRY).Id(dao.IDToString(obj.UserID)).BodyJson(obj).Do(context.TODO())
 	return err
 }
