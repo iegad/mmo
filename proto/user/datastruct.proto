@@ -72,13 +72,13 @@ message Contact {
 //  存放于ES
 message LoginLog {
   common.OSType OSType                 = 1;  // 系统类型
-  int64         UserID                 = 2;  // 用户ID
-  int64         LoginTime              = 3;  // 登录时间
-  bytes         Token                  = 4;  // 令牌
-  int32         DeviceType             = 5;  // 设备类型
-  string        OperatingSystem        = 6;  // 操作系统
-  string        DeviceUniqueIdentifier = 7;  // 唯一码
-  bytes         MacAddr                = 8;  // MAC地址
+  int32         DeviceType             = 2;  // 设备类型
+  int64         UserID                 = 3;  // 用户ID
+  int64         LoginTime              = 4;  // 登录时间
+  bytes         Token                  = 5;  // 令牌
+  bytes         MacAddr                = 6;  // MAC地址
+  string        OperatingSystem        = 7;  // 操作系统
+  string        DeviceUniqueIdentifier = 8;  // 唯一码
   string        MountAddr              = 9;  // 挂载点
   Entry         Entry                  = 10; // 用户条目信息
 }

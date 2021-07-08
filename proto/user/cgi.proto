@@ -1,17 +1,17 @@
 syntax = "proto3";
 
 package user;
-option go_package = "github.com/iegad/mmo/cgi";
+option go_package = "github.com/iegad/mmo/cgi/user";
 
 import "user/datastruct.proto";
 
 message AddEntryReq {
-  repeated user.Entry EntryList = 1;
+  user.Entry EntryList = 1;
 }
 
 message AddEntryRsp {
-  int32               Code      = 1;
-  repeated user.Entry EntryList = 2;
+  int32      Code      = 1;
+  user.Entry EntryList = 2;
 }
 
 message ModEntryReq {

@@ -3,11 +3,16 @@ package cgi
 import "errors"
 
 var (
-	ErrObj     = errors.New("obj is invalid")
-	ErrDB      = errors.New("db is invalid")
-	ErrAccount = errors.New("account is invalid")
-	ErrUserID  = errors.New("userID is invalid")
-	ErrTimeout = errors.New("更新数据超时")
+	ErrObj      = errors.New("obj is invalid")
+	ErrDB       = errors.New("db is invalid")
+	ErrESInner  = errors.New("elastic error")
+	ErrNoUpData = errors.New("no data will be update")
+
+	ErrEmail    = errors.New("email is invalid")
+	ErrPhoneNum = errors.New("phoneNum is invalid")
+	ErrAccount  = errors.New("account is invalid")
+	ErrUserID   = errors.New("userID is invalid")
+	ErrTimeout  = errors.New("更新数据超时")
 
 	ErrCharID        = errors.New("charID is invalid")
 	ErrInfo          = errors.New("info is invalid")
