@@ -34,8 +34,8 @@ func GetEntry(cond *Condition, es *elastic.Client) ([]*ds.Entry, int64, error) {
 	if len(cond.Key) > 0 {
 		or := elastic.NewBoolQuery()
 		or.Should(elastic.NewMatchPhrasePrefixQuery("Nickname", cond.Key))
-		or.Should(elastic.NewMatchPhrasePrefixQuery("PhoneNum", dao.EncodePhoneNum(cond.Key)))
-		or.Should(elastic.NewMatchPhrasePrefixQuery("Email", dao.EncodeEmail(cond.Key)))
+		or.Should(elastic.NewMatchPhrasePrefixQuery("PhoneNum", cond.Key))
+		or.Should(elastic.NewMatchPhrasePrefixQuery("Email", cond.Key))
 
 		query = query.Must(or)
 	}

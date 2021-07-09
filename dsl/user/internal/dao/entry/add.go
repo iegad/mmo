@@ -54,8 +54,6 @@ func AddEntry(obj *user.Entry, es *elastic.Client) error {
 	}
 
 	if len(obj.Email) > 0 {
-		obj.Email = dao.EncodeEmail(obj.Email)
-
 		if hasIndex {
 			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
 			if err != nil {
@@ -70,8 +68,6 @@ func AddEntry(obj *user.Entry, es *elastic.Client) error {
 	}
 
 	if len(obj.PhoneNum) > 0 {
-		obj.PhoneNum = dao.EncodePhoneNum(obj.PhoneNum)
-
 		if hasIndex {
 			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", obj.PhoneNum)).Do(context.TODO())
 			if err != nil {

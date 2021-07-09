@@ -36,7 +36,6 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 	}
 
 	if len(obj.Email) > 0 && obj.Email != raw.Email {
-		obj.Email = dao.EncodeEmail(obj.Email)
 		res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
 		if err != nil {
 			log.Error(err)
@@ -52,7 +51,6 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 	}
 
 	if len(obj.PhoneNum) > 0 && obj.PhoneNum != raw.PhoneNum {
-		obj.PhoneNum = dao.EncodePhoneNum(obj.PhoneNum)
 		res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", obj.PhoneNum)).Do(context.TODO())
 		if err != nil {
 			log.Error(err)

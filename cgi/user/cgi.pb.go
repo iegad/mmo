@@ -163,6 +163,478 @@ func (x *GetEntryRsp) GetEntryList() []*user.Entry {
 	return nil
 }
 
+type AddBasicReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Basic *user.Basic `protobuf:"bytes,1,opt,name=Basic,proto3" json:"Basic,omitempty"`
+}
+
+func (x *AddBasicReq) Reset() {
+	*x = AddBasicReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddBasicReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddBasicReq) ProtoMessage() {}
+
+func (x *AddBasicReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddBasicReq.ProtoReflect.Descriptor instead.
+func (*AddBasicReq) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *AddBasicReq) GetBasic() *user.Basic {
+	if x != nil {
+		return x.Basic
+	}
+	return nil
+}
+
+type AddBasicRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code  int32       `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	Basic *user.Basic `protobuf:"bytes,2,opt,name=Basic,proto3" json:"Basic,omitempty"`
+}
+
+func (x *AddBasicRsp) Reset() {
+	*x = AddBasicRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddBasicRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddBasicRsp) ProtoMessage() {}
+
+func (x *AddBasicRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddBasicRsp.ProtoReflect.Descriptor instead.
+func (*AddBasicRsp) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *AddBasicRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *AddBasicRsp) GetBasic() *user.Basic {
+	if x != nil {
+		return x.Basic
+	}
+	return nil
+}
+
+type ModBasicReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Basic *user.Basic `protobuf:"bytes,1,opt,name=Basic,proto3" json:"Basic,omitempty"`
+}
+
+func (x *ModBasicReq) Reset() {
+	*x = ModBasicReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ModBasicReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModBasicReq) ProtoMessage() {}
+
+func (x *ModBasicReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModBasicReq.ProtoReflect.Descriptor instead.
+func (*ModBasicReq) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ModBasicReq) GetBasic() *user.Basic {
+	if x != nil {
+		return x.Basic
+	}
+	return nil
+}
+
+type ModBasicRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code  int32       `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	Basic *user.Basic `protobuf:"bytes,2,opt,name=Basic,proto3" json:"Basic,omitempty"`
+}
+
+func (x *ModBasicRsp) Reset() {
+	*x = ModBasicRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ModBasicRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModBasicRsp) ProtoMessage() {}
+
+func (x *ModBasicRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModBasicRsp.ProtoReflect.Descriptor instead.
+func (*ModBasicRsp) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ModBasicRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *ModBasicRsp) GetBasic() *user.Basic {
+	if x != nil {
+		return x.Basic
+	}
+	return nil
+}
+
+type RmvBasicReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserID int64 `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID,omitempty"`
+}
+
+func (x *RmvBasicReq) Reset() {
+	*x = RmvBasicReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RmvBasicReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RmvBasicReq) ProtoMessage() {}
+
+func (x *RmvBasicReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RmvBasicReq.ProtoReflect.Descriptor instead.
+func (*RmvBasicReq) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *RmvBasicReq) GetUserID() int64 {
+	if x != nil {
+		return x.UserID
+	}
+	return 0
+}
+
+type RmvBasicRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code  int32       `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	Basic *user.Basic `protobuf:"bytes,2,opt,name=Basic,proto3" json:"Basic,omitempty"`
+}
+
+func (x *RmvBasicRsp) Reset() {
+	*x = RmvBasicRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RmvBasicRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RmvBasicRsp) ProtoMessage() {}
+
+func (x *RmvBasicRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RmvBasicRsp.ProtoReflect.Descriptor instead.
+func (*RmvBasicRsp) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *RmvBasicRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *RmvBasicRsp) GetBasic() *user.Basic {
+	if x != nil {
+		return x.Basic
+	}
+	return nil
+}
+
+type GetBasicReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserID   int64  `protobuf:"varint,1,opt,name=UserID,proto3" json:"UserID,omitempty"`
+	Gender   int32  `protobuf:"varint,2,opt,name=Gender,proto3" json:"Gender,omitempty"`
+	PhoneNum string `protobuf:"bytes,3,opt,name=PhoneNum,proto3" json:"PhoneNum,omitempty"`
+	Email    string `protobuf:"bytes,4,opt,name=Email,proto3" json:"Email,omitempty"`
+	Offset   int64  `protobuf:"varint,5,opt,name=Offset,proto3" json:"Offset,omitempty"`
+	Limit    int64  `protobuf:"varint,6,opt,name=Limit,proto3" json:"Limit,omitempty"`
+	OrderBy  string `protobuf:"bytes,7,opt,name=OrderBy,proto3" json:"OrderBy,omitempty"`
+	Desc     bool   `protobuf:"varint,8,opt,name=Desc,proto3" json:"Desc,omitempty"`
+}
+
+func (x *GetBasicReq) Reset() {
+	*x = GetBasicReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetBasicReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBasicReq) ProtoMessage() {}
+
+func (x *GetBasicReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBasicReq.ProtoReflect.Descriptor instead.
+func (*GetBasicReq) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetBasicReq) GetUserID() int64 {
+	if x != nil {
+		return x.UserID
+	}
+	return 0
+}
+
+func (x *GetBasicReq) GetGender() int32 {
+	if x != nil {
+		return x.Gender
+	}
+	return 0
+}
+
+func (x *GetBasicReq) GetPhoneNum() string {
+	if x != nil {
+		return x.PhoneNum
+	}
+	return ""
+}
+
+func (x *GetBasicReq) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *GetBasicReq) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *GetBasicReq) GetLimit() int64 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetBasicReq) GetOrderBy() string {
+	if x != nil {
+		return x.OrderBy
+	}
+	return ""
+}
+
+func (x *GetBasicReq) GetDesc() bool {
+	if x != nil {
+		return x.Desc
+	}
+	return false
+}
+
+type GetBasicRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code      int32         `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	Total     int64         `protobuf:"varint,2,opt,name=Total,proto3" json:"Total,omitempty"`
+	BasicList []*user.Basic `protobuf:"bytes,3,rep,name=BasicList,proto3" json:"BasicList,omitempty"`
+}
+
+func (x *GetBasicRsp) Reset() {
+	*x = GetBasicRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetBasicRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBasicRsp) ProtoMessage() {}
+
+func (x *GetBasicRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBasicRsp.ProtoReflect.Descriptor instead.
+func (*GetBasicRsp) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetBasicRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *GetBasicRsp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *GetBasicRsp) GetBasicList() []*user.Basic {
+	if x != nil {
+		return x.BasicList
+	}
+	return nil
+}
+
 var File_user_cgi_proto protoreflect.FileDescriptor
 
 var file_user_cgi_proto_rawDesc = []byte{
@@ -183,9 +655,50 @@ var file_user_cgi_proto_rawDesc = []byte{
 	0x54, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x29, 0x0a, 0x09, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x4c, 0x69,
 	0x73, 0x74, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e,
 	0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x09, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x4c, 0x69, 0x73, 0x74,
-	0x42, 0x1f, 0x5a, 0x1d, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x69,
-	0x65, 0x67, 0x61, 0x64, 0x2f, 0x6d, 0x6d, 0x6f, 0x2f, 0x63, 0x67, 0x69, 0x2f, 0x75, 0x73, 0x65,
-	0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0x30, 0x0a, 0x0b, 0x41, 0x64, 0x64, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x65, 0x71, 0x12,
+	0x21, 0x0a, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b,
+	0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x05, 0x42, 0x61, 0x73,
+	0x69, 0x63, 0x22, 0x44, 0x0a, 0x0b, 0x41, 0x64, 0x64, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x73,
+	0x70, 0x12, 0x12, 0x0a, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x21, 0x0a, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x42, 0x61, 0x73, 0x69,
+	0x63, 0x52, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63, 0x22, 0x30, 0x0a, 0x0b, 0x4d, 0x6f, 0x64, 0x42,
+	0x61, 0x73, 0x69, 0x63, 0x52, 0x65, 0x71, 0x12, 0x21, 0x0a, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x42, 0x61,
+	0x73, 0x69, 0x63, 0x52, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63, 0x22, 0x44, 0x0a, 0x0b, 0x4d, 0x6f,
+	0x64, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x43, 0x6f, 0x64,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x21, 0x0a,
+	0x05, 0x42, 0x61, 0x73, 0x69, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75,
+	0x73, 0x65, 0x72, 0x2e, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63,
+	0x22, 0x25, 0x0a, 0x0b, 0x52, 0x6d, 0x76, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x65, 0x71, 0x12,
+	0x16, 0x0a, 0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44, 0x22, 0x44, 0x0a, 0x0b, 0x52, 0x6d, 0x76, 0x42, 0x61,
+	0x73, 0x69, 0x63, 0x52, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x21, 0x0a, 0x05, 0x42, 0x61,
+	0x73, 0x69, 0x63, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x73, 0x65, 0x72,
+	0x2e, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x05, 0x42, 0x61, 0x73, 0x69, 0x63, 0x22, 0xcb, 0x01,
+	0x0a, 0x0b, 0x47, 0x65, 0x74, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x65, 0x71, 0x12, 0x16, 0x0a,
+	0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x55,
+	0x73, 0x65, 0x72, 0x49, 0x44, 0x12, 0x16, 0x0a, 0x06, 0x47, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x47, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x12, 0x1a, 0x0a,
+	0x08, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x4e, 0x75, 0x6d, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x08, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x4e, 0x75, 0x6d, 0x12, 0x14, 0x0a, 0x05, 0x45, 0x6d, 0x61,
+	0x69, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x12,
+	0x16, 0x0a, 0x06, 0x4f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x06, 0x4f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x4c, 0x69, 0x6d, 0x69, 0x74,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x12, 0x18, 0x0a,
+	0x07, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x42, 0x79, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
+	0x4f, 0x72, 0x64, 0x65, 0x72, 0x42, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x44, 0x65, 0x73, 0x63, 0x18,
+	0x08, 0x20, 0x01, 0x28, 0x08, 0x52, 0x04, 0x44, 0x65, 0x73, 0x63, 0x22, 0x62, 0x0a, 0x0b, 0x47,
+	0x65, 0x74, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x43, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x14,
+	0x0a, 0x05, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x54,
+	0x6f, 0x74, 0x61, 0x6c, 0x12, 0x29, 0x0a, 0x09, 0x42, 0x61, 0x73, 0x69, 0x63, 0x4c, 0x69, 0x73,
+	0x74, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x42,
+	0x61, 0x73, 0x69, 0x63, 0x52, 0x09, 0x42, 0x61, 0x73, 0x69, 0x63, 0x4c, 0x69, 0x73, 0x74, 0x42,
+	0x1f, 0x5a, 0x1d, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x69, 0x65,
+	0x67, 0x61, 0x64, 0x2f, 0x6d, 0x6d, 0x6f, 0x2f, 0x63, 0x67, 0x69, 0x2f, 0x75, 0x73, 0x65, 0x72,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -200,19 +713,34 @@ func file_user_cgi_proto_rawDescGZIP() []byte {
 	return file_user_cgi_proto_rawDescData
 }
 
-var file_user_cgi_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_user_cgi_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_user_cgi_proto_goTypes = []interface{}{
 	(*GetEntryReq)(nil), // 0: user.GetEntryReq
 	(*GetEntryRsp)(nil), // 1: user.GetEntryRsp
-	(*user.Entry)(nil),  // 2: user.Entry
+	(*AddBasicReq)(nil), // 2: user.AddBasicReq
+	(*AddBasicRsp)(nil), // 3: user.AddBasicRsp
+	(*ModBasicReq)(nil), // 4: user.ModBasicReq
+	(*ModBasicRsp)(nil), // 5: user.ModBasicRsp
+	(*RmvBasicReq)(nil), // 6: user.RmvBasicReq
+	(*RmvBasicRsp)(nil), // 7: user.RmvBasicRsp
+	(*GetBasicReq)(nil), // 8: user.GetBasicReq
+	(*GetBasicRsp)(nil), // 9: user.GetBasicRsp
+	(*user.Entry)(nil),  // 10: user.Entry
+	(*user.Basic)(nil),  // 11: user.Basic
 }
 var file_user_cgi_proto_depIdxs = []int32{
-	2, // 0: user.GetEntryRsp.EntryList:type_name -> user.Entry
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	10, // 0: user.GetEntryRsp.EntryList:type_name -> user.Entry
+	11, // 1: user.AddBasicReq.Basic:type_name -> user.Basic
+	11, // 2: user.AddBasicRsp.Basic:type_name -> user.Basic
+	11, // 3: user.ModBasicReq.Basic:type_name -> user.Basic
+	11, // 4: user.ModBasicRsp.Basic:type_name -> user.Basic
+	11, // 5: user.RmvBasicRsp.Basic:type_name -> user.Basic
+	11, // 6: user.GetBasicRsp.BasicList:type_name -> user.Basic
+	7,  // [7:7] is the sub-list for method output_type
+	7,  // [7:7] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_user_cgi_proto_init() }
@@ -245,6 +773,102 @@ func file_user_cgi_proto_init() {
 				return nil
 			}
 		}
+		file_user_cgi_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddBasicReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddBasicRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ModBasicReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ModBasicRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RmvBasicReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RmvBasicRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetBasicReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetBasicRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -252,7 +876,7 @@ func file_user_cgi_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_user_cgi_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

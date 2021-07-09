@@ -11,10 +11,11 @@ import (
 var Instance *config
 
 type config struct {
-	Server *conf.Server `json:"server" yaml:"server"`
-	Redis  *conf.Redis  `json:"redis"  yaml:"redis"`
-	Etcd   *conf.Etcd   `json:"etcd"   yaml:"etcd"`
-	MySql  *conf.MySql  `json:"mysql"  yaml:"mysql"`
+	Server  *conf.Server  `json:"server"  yaml:"server"`
+	Redis   *conf.Redis   `json:"redis"   yaml:"redis"`
+	Etcd    *conf.Etcd    `json:"etcd"    yaml:"etcd"`
+	MySql   *conf.MySql   `json:"mysql"   yaml:"mysql"`
+	Elastic *conf.Elastic `json:"elastic" yaml:"elastic"`
 }
 
 func Init(fname string) error {
@@ -45,6 +46,11 @@ func Init(fname string) error {
 	}
 
 	err = conf.CheckRedis(c.Redis)
+	if err != nil {
+		return err
+	}
+
+	err = conf.CheckElastic(c.Elastic)
 	if err != nil {
 		return err
 	}

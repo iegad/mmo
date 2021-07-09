@@ -3,10 +3,11 @@ package cgi
 import "errors"
 
 var (
-	ErrObj      = errors.New("obj is invalid")
-	ErrDB       = errors.New("db is invalid")
-	ErrESInner  = errors.New("elastic error")
-	ErrNoUpData = errors.New("no data will be update")
+	ErrObj        = errors.New("obj is invalid")
+	ErrDB         = errors.New("db is invalid")
+	ErrESInner    = errors.New("elastic error")
+	ErrMySQLInner = errors.New("mysql error")
+	ErrNoUpData   = errors.New("no data will be update")
 
 	ErrEmail    = errors.New("email is invalid")
 	ErrPhoneNum = errors.New("phoneNum is invalid")
