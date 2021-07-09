@@ -8,11 +8,13 @@ var (
 	ErrESInner    = errors.New("elastic error")
 	ErrMySQLInner = errors.New("mysql error")
 	ErrNoUpData   = errors.New("no data will be update")
+	ErrNoAffected = errors.New("no row affected")
 
 	ErrEmail    = errors.New("email is invalid")
 	ErrPhoneNum = errors.New("phoneNum is invalid")
 	ErrAccount  = errors.New("account is invalid")
 	ErrUserID   = errors.New("userID is invalid")
+	ErrAvator   = errors.New("avator is invalid")
 	ErrTimeout  = errors.New("更新数据超时")
 
 	ErrCharID        = errors.New("charID is invalid")

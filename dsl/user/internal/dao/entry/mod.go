@@ -25,14 +25,10 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		return err
 	}
 
-	var (
-		updata  = map[string]interface{}{}
-		changed = false
-	)
+	updata := map[string]interface{}{}
 
 	if len(obj.Avator) > 0 && obj.Avator != raw.Avator {
 		updata["Avator"] = obj.Avator
-		changed = true
 	}
 
 	if len(obj.Email) > 0 && obj.Email != raw.Email {
@@ -47,7 +43,6 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		}
 
 		updata["Email"] = obj.Email
-		changed = true
 	}
 
 	if len(obj.PhoneNum) > 0 && obj.PhoneNum != raw.PhoneNum {
@@ -62,20 +57,17 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		}
 
 		updata["PhoneNum"] = obj.PhoneNum
-		changed = true
 	}
 
 	if obj.Gender > 0 && obj.Gender != raw.Gender {
 		updata["Gender"] = obj.Gender
-		changed = true
 	}
 
 	if len(obj.Nickname) > 0 && obj.Nickname != raw.Nickname {
 		updata["Nickname"] = obj.Nickname
-		changed = true
 	}
 
-	if !changed {
+	if len(updata) == 0 {
 		return cgi.ErrNoUpData
 	}
 

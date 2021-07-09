@@ -8,14 +8,11 @@ import (
 	"github.com/iegad/kraken/conf"
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/ds/user"
-	"github.com/iegad/mmo/dsl/user/internal/com"
 	"github.com/olivere/elastic/v7"
 )
 
-func initES() error {
-	var err error
-	com.Elastic, err = elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"), elastic.SetSniff(false))
-	return err
+func getES() (*elastic.Client, error) {
+	return elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"), elastic.SetSniff(false))
 }
 
 func getDb() (*sql.DB, error) {
@@ -29,7 +26,7 @@ func getDb() (*sql.DB, error) {
 }
 
 func TestAdd(t *testing.T) {
-	err := initES()
+	es, err := getES()
 	if err != nil {
 		t.Error(err)
 		return
@@ -47,7 +44,7 @@ func TestAdd(t *testing.T) {
 	basic.Entry.Nickname = "iegad"
 	basic.Entry.PhoneNum = "123456789"
 
-	err = AddBasic(basic, db)
+	err = AddBasic(basic, db, es)
 	if err != nil {
 		t.Error(err)
 		return
