@@ -51,14 +51,18 @@ message RmvBasicRsp {
 }
 
 message GetBasicReq {
-  int64  UserID   = 1;
-  int32  Gender   = 2;
-  string PhoneNum = 3;
-  string Email    = 4;
-  int64  Offset   = 5;
-  int64  Limit    = 6;
-  string OrderBy  = 7;
-  bool   Desc     = 8;
+  int64  UserID        = 1;
+  int32  Gender        = 2;
+  string PhoneNum      = 3;
+  string Email         = 4;
+  int64  CreateTimeBeg = 5;
+  int64  CreateTimeEnd = 6;
+  int64  LastUpdateBeg = 7;
+  int64  LastUpdateEnd = 8;
+  int64  Offset        = 9;
+  int64  Limit         = 10;
+  string OrderBy       = 11;
+  bool   Desc          = 12;
 }
 
 message GetBasicRsp {
