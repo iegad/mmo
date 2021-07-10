@@ -1,26 +1,33 @@
 server:
-    maxConn: 1000
-    timeout: 0
-    host: :10000
-    protocol: tcp
-    project: mmorpg
-    service: userService
-    id: 95ece4b9-64da-4936-a027-8ad3a0373120
-    logPath: ""
+  maxConn: 1000
+  timeout: 0
+  host: :10000
+  protocol: tcp
+  project: mmorpg
+  service: userService
+  id: 95ece4b9-64da-4936-a027-8ad3a0373120
+  logPath: ""
+
 redis:
-    db: 0
-    user: ""
-    pass: ""
-    hosts:
+  db: 0
+  user: ""
+  pass: ""
+  hosts:
         - 127.0.0.1:6379
+
 etcd:
-    user: ""
-    pass: ""
-    hosts:
-        - 127.0.0.1:2379
+  user: ""
+  pass: ""
+  hosts:
+    - 127.0.0.1:2379
+
 mysql:
-    port: 3306
-    addr: 127.0.0.1
-    user: root
-    pass: "123456"
-    database: DB_BASIC
+  port: 3306
+  addr: 127.0.0.1
+  user: root
+  pass: "123456"
+  database: DB_BASIC
+
+elastic:
+  hosts:
+    - 127.0.0.1:9200

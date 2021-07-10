@@ -7,19 +7,21 @@ import (
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/cgi"
-	"github.com/iegad/mmo/ds/user"
+	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/dao"
 	"github.com/olivere/elastic/v7"
 )
 
-func AddEntry(obj *user.Entry, es *elastic.Client) error {
+// AddEntry 新增用户条目
+func AddEntry(obj *ds.Entry, es *elastic.Client) error {
 	utils.Assert(obj != nil && es != nil, "AddEntry in params invalid")
 
-	if obj.UserID <= 0 {
+	// Step 1: 入参检查
+	if obj.UserID < ds.MIN_USER_ID {
 		return cgi.ErrUserID
 	}
 
-	if obj.Gender < 1 || obj.Gender > 3 {
+	if obj.Gender < ds.MIN_GENDER || obj.Gender > ds.MAX_GENDER {
 		return cgi.ErrGender
 	}
 
@@ -27,60 +29,83 @@ func AddEntry(obj *user.Entry, es *elastic.Client) error {
 		return cgi.ErrAccount
 	}
 
-	if len(obj.Email) > 0 && utf8.RuneCountInString(obj.Email) > 50 {
+	if len(obj.Email) > 0 && len(obj.Email) > ds.MAX_EMAIL {
 		return cgi.ErrEmail
 	}
 
-	if len(obj.PhoneNum) > 0 && utf8.RuneCountInString(obj.PhoneNum) > 15 {
+	if len(obj.PhoneNum) > 0 && len(obj.PhoneNum) > ds.MAX_PHONE_NUM {
 		return cgi.ErrPhoneNum
 	}
 
-	hasIndex, err := es.IndexExists(dao.N_USER_ENTRY).Do(context.TODO())
+	if utf8.RuneCountInString(obj.Nickname) > ds.MAX_NICKNAME {
+		return cgi.ErrNickname
+	}
+
+	if len(obj.Avator) > 500 {
+		return cgi.ErrAvator
+	}
+
+	// Step 2: 判断UserID是否存在
+	exists, err := es.Exists().Index(dao.N_USER_ENTRY).Id(dao.IDToString(obj.UserID)).Do(context.TODO())
 	if err != nil {
 		log.Error(err)
 		return cgi.ErrESInner
 	}
 
-	if hasIndex {
-		exists, err := es.Exists().Index(dao.N_USER_ENTRY).Id(dao.IDToString(obj.UserID)).Do(context.TODO())
+	if exists {
+		return cgi.ErrUserExists
+	}
+
+	// Step 3: 检查邮箱是否被使用
+	if len(obj.Email) > 0 {
+		found, err := existsEmail(obj.Email, es)
 		if err != nil {
 			log.Error(err)
 			return cgi.ErrESInner
 		}
 
-		if exists {
-			return cgi.ErrUserID
+		if found {
+			return cgi.ErrEmailExists
 		}
 	}
 
-	if len(obj.Email) > 0 {
-		if hasIndex {
-			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
-			if err != nil {
-				log.Error(err)
-				return cgi.ErrESInner
-			}
-
-			if res.TotalHits() != 0 {
-				return cgi.ErrEmail
-			}
-		}
-	}
-
+	// Step 4: 检查手机号是否被使用
 	if len(obj.PhoneNum) > 0 {
-		if hasIndex {
-			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", obj.PhoneNum)).Do(context.TODO())
-			if err != nil {
-				log.Error(err)
-				return cgi.ErrESInner
-			}
+		found, err := existsPhoneNum(obj.PhoneNum, es)
+		if err != nil {
+			log.Error(err)
+			return cgi.ErrESInner
+		}
 
-			if res.TotalHits() != 0 {
-				return cgi.ErrPhoneNum
-			}
+		if found {
+			return cgi.ErrPhoneNumExists
 		}
 	}
 
+	// Step 5: 写入ES
 	_, err = es.Index().Index(dao.N_USER_ENTRY).Id(dao.IDToString(obj.UserID)).BodyJson(obj).Do(context.TODO())
+	if err != nil {
+		log.Error(err)
+		return cgi.ErrESInner
+	}
+
 	return err
+}
+
+func existsPhoneNum(phoneNum string, es *elastic.Client) (bool, error) {
+	res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", phoneNum)).Do(context.TODO())
+	if err != nil {
+		return false, err
+	}
+
+	return res.TotalHits() > 0, nil
+}
+
+func existsEmail(email string, es *elastic.Client) (bool, error) {
+	res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", email)).Do(context.TODO())
+	if err != nil {
+		return false, err
+	}
+
+	return res.TotalHits() > 0, nil
 }

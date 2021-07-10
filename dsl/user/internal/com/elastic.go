@@ -1,11 +1,13 @@
 package com
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/dsl/user/internal/cfg"
+	"github.com/iegad/mmo/dsl/user/internal/dao"
 	"github.com/olivere/elastic/v7"
 )
 
@@ -30,6 +32,18 @@ func initElastic() error {
 		return err
 	}
 
-	return nil
+	ctx := context.TODO()
+	exists, err := Elastic.IndexExists(dao.N_USER_ENTRY).Do(ctx)
+	if err != nil {
+		return err
+	}
 
+	if !exists {
+		_, err = Elastic.CreateIndex(dao.N_USER_ENTRY).Do(ctx)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

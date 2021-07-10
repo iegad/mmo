@@ -11,5 +11,10 @@ func Init() error {
 		return err
 	}
 
+	err = initElastic()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -3,6 +3,7 @@ package entry
 import (
 	"context"
 	"encoding/json"
+	"unicode/utf8"
 
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/utils"
@@ -15,23 +16,36 @@ import (
 func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 	utils.Assert(obj != nil && es != nil, "ModEntry in params is invalid")
 
+	// Step 1: 入参检查
 	if obj.UserID <= 0 {
 		return cgi.ErrUserID
 	}
 
+	// Step 2: 获取原始数据
 	raw, err := GetEntryByID(obj.UserID, es)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
+	// Step 3: 验证更新数据
 	updata := map[string]interface{}{}
 
+	// 头像验证
 	if len(obj.Avator) > 0 && obj.Avator != raw.Avator {
+		if len(obj.Avator) > 500 {
+			return cgi.ErrAvator
+		}
+
 		updata["Avator"] = obj.Avator
 	}
 
+	// 邮箱验证
 	if len(obj.Email) > 0 && obj.Email != raw.Email {
+		if utf8.RuneCountInString(obj.Email) > ds.MAX_EMAIL {
+			return cgi.ErrEmail
+		}
+
 		res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
 		if err != nil {
 			log.Error(err)
@@ -39,32 +53,56 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		}
 
 		if res.TotalHits() != 0 {
-			return cgi.ErrEmail
+			return cgi.ErrEmailExists
 		}
 
 		updata["Email"] = obj.Email
 	}
 
+	// 手机号验证
 	if len(obj.PhoneNum) > 0 && obj.PhoneNum != raw.PhoneNum {
-		res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", obj.PhoneNum)).Do(context.TODO())
+		if len(obj.PhoneNum) > 15 {
+			return cgi.ErrPhoneNum
+		}
+
+		found, err := existsPhoneNum(obj.PhoneNum, es)
 		if err != nil {
 			log.Error(err)
 			return cgi.ErrESInner
 		}
 
-		if res.TotalHits() != 0 {
-			return cgi.ErrPhoneNum
+		if found {
+			return cgi.ErrPhoneNumExists
 		}
 
 		updata["PhoneNum"] = obj.PhoneNum
 	}
 
+	// 性别验证
 	if obj.Gender > 0 && obj.Gender != raw.Gender {
+		if obj.Gender > ds.MAX_GENDER {
+			return cgi.ErrGender
+		}
+
 		updata["Gender"] = obj.Gender
 	}
 
+	// 昵称验证
 	if len(obj.Nickname) > 0 && obj.Nickname != raw.Nickname {
+		if utf8.RuneCountInString(obj.Nickname) > ds.MAX_NICKNAME {
+			return cgi.ErrNickname
+		}
+
 		updata["Nickname"] = obj.Nickname
+	}
+
+	// 头像验证
+	if len(obj.Avator) > 0 {
+		if len(obj.Avator) > ds.MAX_AVATOR {
+			return cgi.ErrAvator
+		}
+
+		updata["Avator"] = obj.Avator
 	}
 
 	if len(updata) == 0 {
@@ -77,6 +115,11 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		return cgi.ErrESInner
 	}
 
-	json.Unmarshal(up.GetResult.Source, obj)
+	err = json.Unmarshal(up.GetResult.Source, obj)
+	if err != nil {
+		log.Error(err)
+		return cgi.ErrESDataType
+	}
+
 	return nil
 }
