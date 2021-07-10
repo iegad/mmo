@@ -8,14 +8,15 @@ import (
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/cgi"
-	"github.com/iegad/mmo/ds/user"
+	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/dao/entry"
 	"github.com/olivere/elastic/v7"
 )
 
-func AddBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
-	utils.Assert(obj != nil && &obj.Entry != nil && db != nil, "AddBasic in params is invalid")
+func AddBasic(obj *ds.Basic, db *sql.DB, es *elastic.Client) error {
+	utils.Assert(obj != nil && &obj.Entry != nil && db != nil && es != nil, "AddBasic in params is invalid")
 
+	// Step 1: 入参检查
 	if obj.Entry.UserID > 0 {
 		return cgi.ErrUserID
 	}
@@ -24,32 +25,32 @@ func AddBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
 		return cgi.ErrAccount
 	}
 
-	if len(obj.Entry.Nickname) > 0 && utf8.RuneCountInString(obj.Entry.Nickname) > 8 {
+	if len(obj.Entry.Nickname) > 0 && utf8.RuneCountInString(obj.Entry.Nickname) > ds.MAX_NICKNAME {
 		return cgi.ErrNickname
 	}
 
-	if len(obj.Entry.Avator) > 500 {
+	if len(obj.Entry.Avator) > ds.MAX_AVATOR {
 		return cgi.ErrAvator
 	}
 
 	if len(obj.Entry.Email) > 0 {
-		if utf8.RuneCountInString(obj.Entry.Email) > 50 {
+		if len(obj.Entry.Email) > ds.MAX_EMAIL {
 			return cgi.ErrEmail
 		}
 
-		exists, err := existsEmail(obj.Entry.Email, db)
+		found, err := existsEmail(obj.Entry.Email, db)
 		if err != nil {
 			log.Error(err)
 			return cgi.ErrMySQLInner
 		}
 
-		if exists {
-			return cgi.ErrEmail
+		if found {
+			return cgi.ErrEmailExists
 		}
 	}
 
 	if len(obj.Entry.PhoneNum) > 0 {
-		if utf8.RuneCountInString(obj.Entry.PhoneNum) > 15 {
+		if len(obj.Entry.PhoneNum) > ds.MAX_PHONE_NUM {
 			return cgi.ErrPhoneNum
 		}
 
@@ -64,18 +65,24 @@ func AddBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 	}
 
+	if obj.Entry.Gender > ds.MAX_GENDER || obj.Entry.Gender < ds.MIN_GENDER {
+		return cgi.ErrGender
+	}
+
 	if obj.Entry.Gender == 0 {
 		obj.Entry.Gender = 3
 	}
 
 	obj.CreateTime = time.Now().Unix()
 
+	// Step 2: 开启MYSQL事务
 	tx, err := db.Begin()
 	if err != nil {
 		log.Error(err)
 		return cgi.ErrMySQLInner
 	}
 
+	// Step 3: 写入Basic 到 MYSQL
 	res, err := tx.Exec("INSERT INTO `DB_USER`.`T_BASIC`(F_EMAIL,F_PHONE_NUM,F_GENDER,F_NICKNAME,F_AVATOR,F_CREATE_TIME) VALUES(?,?,?,?,?,?)",
 		utils.IF_STR_EMPTY(obj.Entry.Email), utils.IF_STR_EMPTY(obj.Entry.PhoneNum), obj.Entry.Gender, obj.Entry.Nickname, obj.Entry.Avator, obj.CreateTime)
 	if err != nil {
@@ -91,6 +98,7 @@ func AddBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
 		return cgi.ErrMySQLInner
 	}
 
+	// Step 4: 写入Entry到 ES
 	err = entry.AddEntry(obj.Entry, es)
 	if err != nil {
 		log.Error(err)
@@ -98,6 +106,7 @@ func AddBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
 		return cgi.ErrESInner
 	}
 
+	// Step 5: 提交事务
 	return tx.Commit()
 }
 

@@ -3,6 +3,7 @@ package cgi
 import "errors"
 
 var (
+	ErrRsp        = errors.New("none response")
 	ErrESInner    = errors.New("elastic error")          // ES返回错误
 	ErrMySQLInner = errors.New("mysql error")            // MYSQL 返回错误
 	ErrNoUpData   = errors.New("no data will be update") // 没有需要更新的数据

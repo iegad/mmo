@@ -18,16 +18,17 @@ const (
 	queryCount = "SELECT COUNT(1) FROM `DB_USER`.`T_BASIC` WHERE 1=1"
 )
 
+// GetBasicByID 通过UserID获取用户基础信息
 func GetBasicByID(userID int64, db *sql.DB) (*ds.Basic, error) {
 	utils.Assert(userID > 0 && db != nil, "GetBasicByID in params is invalid")
 
-	basic := ds.NewBasic()
-	basic.Entry = ds.NewEntry()
-	row := db.QueryRow("SELECT F_EMAIL,F_PHONE_NUM,F_GENDER,F_NICKNAME,F_AVATOR,F_CREATE_TIME,F_LAST_UPDATE,F_VER_CODE FROM `DB_USER`.`T_BASIC` WHERE F_USER_ID=?", userID)
-
 	var (
+		err   error
+		row   = db.QueryRow("SELECT F_EMAIL,F_PHONE_NUM,F_GENDER,F_NICKNAME,F_AVATOR,F_CREATE_TIME,F_LAST_UPDATE,F_VER_CODE FROM `DB_USER`.`T_BASIC` WHERE F_USER_ID=?", userID)
+		basic = &ds.Basic{
+			Entry: &ds.Entry{},
+		}
 		email, phoneNum sql.NullString
-		err             error
 	)
 
 	for dwf := true; dwf; dwf = false {
@@ -49,15 +50,10 @@ func GetBasicByID(userID int64, db *sql.DB) (*ds.Basic, error) {
 		basic.Entry.UserID = userID
 	}
 
-	if err != nil {
-		ds.DeleteEntry(basic.Entry)
-		ds.DeleteBasic(basic)
-		return nil, err
-	}
-
 	return basic, nil
 }
 
+// GetBasic 获取基础信息
 func GetBasic(cond *user.GetBasicReq, db *sql.DB) ([]*ds.Basic, int64, error) {
 	utils.Assert(cond != nil && db != nil, "GetBasic in params is invalid")
 
@@ -133,11 +129,12 @@ func GetBasic(cond *user.GetBasicReq, db *sql.DB) ([]*ds.Basic, int64, error) {
 	for dwf := true; dwf; dwf = false {
 		for rows.Next() {
 			var (
-				basic           = ds.NewBasic()
+				basic = &ds.Basic{
+					Entry: &ds.Entry{},
+				}
 				email, phoneNum sql.NullString
 			)
 
-			basic.Entry = ds.NewEntry()
 			err = rows.Scan(&basic.Entry.UserID, &email, &phoneNum, &basic.Entry.Gender, &basic.Entry.Nickname, &basic.Entry.Avator, &basic.CreateTime, &basic.LastUpdate, &basic.VerCode)
 			if err != nil {
 				log.Error(err)
@@ -165,10 +162,6 @@ func GetBasic(cond *user.GetBasicReq, db *sql.DB) ([]*ds.Basic, int64, error) {
 	}
 
 	if err != nil {
-		for _, basic := range dataList {
-			ds.DeleteBasic(basic)
-		}
-
 		return nil, -1, err
 	}
 

@@ -9,12 +9,13 @@ import (
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/ds/user"
+	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/dao/entry"
 	"github.com/olivere/elastic/v7"
 )
 
-func ModBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
-	utils.Assert(obj != nil && &obj.Entry != nil && db != nil, "ModBasic in params is invalid")
+func ModBasic(obj *ds.Basic, db *sql.DB, es *elastic.Client) error {
+	utils.Assert(obj != nil && &obj.Entry != nil && db != nil && es != nil, "ModBasic in params is invalid")
 
 	if obj.Entry.UserID <= 0 {
 		return cgi.ErrUserID
@@ -22,7 +23,7 @@ func ModBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
 
 	var (
 		err error
-		raw *user.Basic
+		raw *ds.Basic
 	)
 
 	for i := 0; i < 3; i++ {
@@ -35,9 +36,6 @@ func ModBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
 		if err == nil || err != cgi.ErrNoAffected {
 			break
 		}
-
-		user.DeleteEntry(raw.Entry)
-		user.DeleteBasic(raw)
 	}
 
 	if err != nil {
@@ -55,21 +53,21 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		changed := false
 
 		if len(obj.Entry.Email) > 0 {
-			if utf8.RuneCountInString(obj.Entry.Email) > 50 {
+			if len(obj.Entry.Email) > ds.MAX_EMAIL {
 				err = cgi.ErrEmail
 				break
 			}
 
 			if obj.Entry.Email != raw.Entry.Email {
-				exists, err := existsEmail(obj.Entry.Email, db)
+				found, err := existsEmail(obj.Entry.Email, db)
 				if err != nil {
 					log.Error(err)
 					err = cgi.ErrMySQLInner
 					break
 				}
 
-				if exists {
-					err = cgi.ErrEmail
+				if found {
+					err = cgi.ErrEmailExists
 					break
 				}
 
@@ -80,21 +78,21 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 
 		if len(obj.Entry.PhoneNum) > 0 {
-			if utf8.RuneCountInString(obj.Entry.PhoneNum) > 15 {
+			if len(obj.Entry.PhoneNum) > ds.MAX_PHONE_NUM {
 				err = cgi.ErrPhoneNum
 				break
 			}
 
 			if obj.Entry.PhoneNum != raw.Entry.PhoneNum {
-				exists, err := existsPhoneNum(obj.Entry.PhoneNum, db)
+				found, err := existsPhoneNum(obj.Entry.PhoneNum, db)
 				if err != nil {
 					log.Error(err)
 					err = cgi.ErrMySQLInner
 					break
 				}
 
-				if exists {
-					err = cgi.ErrPhoneNum
+				if found {
+					err = cgi.ErrPhoneNumExists
 					break
 				}
 
@@ -105,7 +103,7 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 
 		if obj.Entry.Gender > 0 {
-			if obj.Entry.Gender < 1 || obj.Entry.Gender > 3 {
+			if obj.Entry.Gender < ds.MIN_GENDER || obj.Entry.Gender > ds.MAX_GENDER {
 				err = cgi.ErrGender
 				break
 			}
@@ -118,7 +116,7 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 
 		if len(obj.Entry.Nickname) > 0 {
-			if utf8.RuneCountInString(obj.Entry.Nickname) > 8 {
+			if utf8.RuneCountInString(obj.Entry.Nickname) > ds.MAX_NICKNAME {
 				err = cgi.ErrNickname
 				break
 			}
@@ -131,7 +129,7 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 
 		if len(obj.Entry.Avator) > 0 {
-			if len(obj.Entry.Avator) > 500 {
+			if len(obj.Entry.Avator) > ds.MAX_AVATOR {
 				err = cgi.ErrAvator
 				break
 			}

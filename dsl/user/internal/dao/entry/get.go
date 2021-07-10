@@ -14,15 +14,13 @@ import (
 	"github.com/olivere/elastic/v7"
 )
 
-type Condition user.GetEntryReq
-
 var (
 	refType = reflect.TypeOf(&ds.Entry{})
 )
 
 // GetEntry 在ES中查询用户条目
 //  @PS: 查询结果集中的Entry项不需要释放
-func GetEntry(cond *Condition, es *elastic.Client) ([]*ds.Entry, int64, error) {
+func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, error) {
 	utils.Assert(cond != nil && es != nil, "GetEntry in params is invalid")
 
 	// Step 1: 构建查询条件
@@ -118,8 +116,7 @@ func GetEntryByID(userID int64, es *elastic.Client) (*ds.Entry, error) {
 	)
 
 	if !ok {
-		log.Error("user_entry type is invalid")
-		return nil, cgi.ErrESInner
+		return nil, cgi.ErrESDataType
 	}
 
 	return entry, nil

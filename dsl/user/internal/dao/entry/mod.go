@@ -32,68 +32,78 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 	updata := map[string]interface{}{}
 
 	// 头像验证
-	if len(obj.Avator) > 0 && obj.Avator != raw.Avator {
-		if len(obj.Avator) > 500 {
+	if len(obj.Avator) > 0 {
+		if len(obj.Avator) > ds.MAX_AVATOR {
 			return cgi.ErrAvator
 		}
 
-		updata["Avator"] = obj.Avator
+		if obj.Avator != raw.Avator {
+			updata["Avator"] = obj.Avator
+		}
 	}
 
 	// 邮箱验证
-	if len(obj.Email) > 0 && obj.Email != raw.Email {
+	if len(obj.Email) > 0 {
 		if utf8.RuneCountInString(obj.Email) > ds.MAX_EMAIL {
 			return cgi.ErrEmail
 		}
 
-		res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
-		if err != nil {
-			log.Error(err)
-			return cgi.ErrESInner
-		}
+		if obj.Email != raw.Email {
+			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
+			if err != nil {
+				log.Error(err)
+				return cgi.ErrESInner
+			}
 
-		if res.TotalHits() != 0 {
-			return cgi.ErrEmailExists
-		}
+			if res.TotalHits() != 0 {
+				return cgi.ErrEmailExists
+			}
 
-		updata["Email"] = obj.Email
+			updata["Email"] = obj.Email
+		}
 	}
 
 	// 手机号验证
-	if len(obj.PhoneNum) > 0 && obj.PhoneNum != raw.PhoneNum {
-		if len(obj.PhoneNum) > 15 {
+	if len(obj.PhoneNum) > 0 {
+		if len(obj.PhoneNum) > ds.MAX_PHONE_NUM {
 			return cgi.ErrPhoneNum
 		}
 
-		found, err := existsPhoneNum(obj.PhoneNum, es)
-		if err != nil {
-			log.Error(err)
-			return cgi.ErrESInner
-		}
+		if obj.PhoneNum != raw.PhoneNum {
+			found, err := existsPhoneNum(obj.PhoneNum, es)
+			if err != nil {
+				log.Error(err)
+				return cgi.ErrESInner
+			}
 
-		if found {
-			return cgi.ErrPhoneNumExists
-		}
+			if found {
+				return cgi.ErrPhoneNumExists
+			}
 
-		updata["PhoneNum"] = obj.PhoneNum
+			updata["PhoneNum"] = obj.PhoneNum
+		}
 	}
 
 	// 性别验证
-	if obj.Gender > 0 && obj.Gender != raw.Gender {
+	if obj.Gender > 0 {
 		if obj.Gender > ds.MAX_GENDER {
 			return cgi.ErrGender
 		}
 
-		updata["Gender"] = obj.Gender
+		if obj.Gender != raw.Gender {
+			updata["Gender"] = obj.Gender
+		}
 	}
 
 	// 昵称验证
-	if len(obj.Nickname) > 0 && obj.Nickname != raw.Nickname {
+	if len(obj.Nickname) > 0 {
 		if utf8.RuneCountInString(obj.Nickname) > ds.MAX_NICKNAME {
 			return cgi.ErrNickname
 		}
 
-		updata["Nickname"] = obj.Nickname
+		if obj.Nickname != raw.Nickname {
+			updata["Nickname"] = obj.Nickname
+		}
 	}
 
 	// 头像验证
@@ -102,7 +112,9 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 			return cgi.ErrAvator
 		}
 
-		updata["Avator"] = obj.Avator
+		if obj.Avator != raw.Avator {
+			updata["Avator"] = obj.Avator
+		}
 	}
 
 	if len(updata) == 0 {
