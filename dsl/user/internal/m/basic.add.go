@@ -4,23 +4,18 @@ import (
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/piper"
 	"github.com/iegad/kraken/utils"
-	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/cgi/user"
 	"github.com/iegad/mmo/dsl/user/internal/com"
 	"github.com/iegad/mmo/dsl/user/internal/dao/basic"
 )
 
 func (this_ *UserService) AddBasic(ctx *piper.Context, req *user.AddBasicReq, rsp *user.AddBasicRsp) error {
-	utils.Assert(ctx != nil && req != nil, "AddBasic in params is invalid")
+	utils.Assert(ctx != nil && req != nil && rsp != nil, "AddBasic in params is invalid")
 
 	// Step 1: 入参检查
 	if req.Basic == nil {
 		rsp.Code = -1
 		return nil
-	}
-
-	if rsp == nil {
-		return cgi.ErrRsp
 	}
 
 	// Step 2: DAO调用

@@ -65,12 +65,12 @@ func AddBasic(obj *ds.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 	}
 
-	if obj.Entry.Gender > ds.MAX_GENDER || obj.Entry.Gender < ds.MIN_GENDER {
-		return cgi.ErrGender
-	}
-
 	if obj.Entry.Gender == 0 {
 		obj.Entry.Gender = 3
+	}
+
+	if obj.Entry.Gender > ds.MAX_GENDER || obj.Entry.Gender < ds.MIN_GENDER {
+		return cgi.ErrGender
 	}
 
 	obj.CreateTime = time.Now().Unix()

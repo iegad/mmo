@@ -4,7 +4,6 @@ import (
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/piper"
 	"github.com/iegad/kraken/utils"
-	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/cgi/user"
 	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/com"
@@ -12,10 +11,7 @@ import (
 )
 
 func (this_ *UserService) GetEntry(ctx *piper.Context, req *user.GetEntryReq, rsp *user.GetEntryRsp) error {
-	utils.Assert(ctx != nil && req != nil, "GetEntry in params is invalid")
-	if rsp != nil {
-		return cgi.ErrRsp
-	}
+	utils.Assert(ctx != nil && req != nil && rsp != nil, "GetEntry in params is invalid")
 
 	if req.UserID > 0 {
 		entry, err := entry.GetEntryByID(req.UserID, com.Elastic)

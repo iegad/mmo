@@ -147,6 +147,7 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		}
 
 		obj.LastUpdate = time.Now().Unix()
+		obj.CreateTime = raw.CreateTime
 		obj.VerCode = raw.VerCode + 1
 
 		tx, err := db.Begin()

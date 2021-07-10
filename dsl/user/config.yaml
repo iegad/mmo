@@ -1,7 +1,7 @@
 server:
   maxConn: 1000
   timeout: 0
-  host: :10000
+  host: 127.0.0.1:10000
   protocol: tcp
   project: mmorpg
   service: userService
@@ -26,7 +26,7 @@ mysql:
   addr: 127.0.0.1
   user: root
   pass: "123456"
-  database: DB_BASIC
+  database: DB_USER
 
 elastic:
   hosts:

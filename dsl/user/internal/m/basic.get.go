@@ -4,7 +4,6 @@ import (
 	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/piper"
 	"github.com/iegad/kraken/utils"
-	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/cgi/user"
 	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/com"
@@ -12,11 +11,7 @@ import (
 )
 
 func (this_ *UserService) GetBasic(ctx *piper.Context, req *user.GetBasicReq, rsp *user.GetBasicRsp) error {
-	utils.Assert(ctx != nil && req != nil, "AddBasic in params is invalid")
-
-	if rsp == nil {
-		return cgi.ErrRsp
-	}
+	utils.Assert(ctx != nil && req != nil && rsp != nil, "GetBasic in params is invalid")
 
 	if req.UserID > 0 {
 		basic, err := basic.GetBasicByID(req.UserID, com.MySql)
