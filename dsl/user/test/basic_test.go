@@ -141,3 +141,24 @@ func TestGetEntry(t *testing.T) {
 
 	t.Log(utils.PbToJson(rsp))
 }
+
+func TestGetArchiveLog(t *testing.T) {
+	pc, err := getClient()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer pc.Close()
+
+	req := &user.GetArchiveLogReq{UserID: 1}
+	rsp := &user.GetArchiveLogRsp{}
+
+	err = pc.Call("GetArchiveLog", req, rsp)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Log(utils.PbToJson(rsp))
+}
