@@ -667,6 +667,165 @@ func (x *GetBasicRsp) GetBasicList() []*user.Basic {
 	return nil
 }
 
+// ----------------- Basic -----------------
+type GetArchiveLogReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type           user.ArchiveLogType `protobuf:"varint,1,opt,name=Type,proto3,enum=user.ArchiveLogType" json:"Type,omitempty"`
+	UserID         int64               `protobuf:"varint,2,opt,name=UserID,proto3" json:"UserID,omitempty"`
+	ArchiveTimeBeg int64               `protobuf:"varint,3,opt,name=ArchiveTimeBeg,proto3" json:"ArchiveTimeBeg,omitempty"`
+	ArchiveTimeEnd int64               `protobuf:"varint,4,opt,name=ArchiveTimeEnd,proto3" json:"ArchiveTimeEnd,omitempty"`
+	VerCode        uint32              `protobuf:"varint,5,opt,name=VerCode,proto3" json:"VerCode,omitempty"`
+	Offset         int64               `protobuf:"varint,6,opt,name=Offset,proto3" json:"Offset,omitempty"`
+	Limit          int64               `protobuf:"varint,7,opt,name=Limit,proto3" json:"Limit,omitempty"`
+}
+
+func (x *GetArchiveLogReq) Reset() {
+	*x = GetArchiveLogReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetArchiveLogReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetArchiveLogReq) ProtoMessage() {}
+
+func (x *GetArchiveLogReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetArchiveLogReq.ProtoReflect.Descriptor instead.
+func (*GetArchiveLogReq) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetArchiveLogReq) GetType() user.ArchiveLogType {
+	if x != nil {
+		return x.Type
+	}
+	return user.ArchiveLogType(0)
+}
+
+func (x *GetArchiveLogReq) GetUserID() int64 {
+	if x != nil {
+		return x.UserID
+	}
+	return 0
+}
+
+func (x *GetArchiveLogReq) GetArchiveTimeBeg() int64 {
+	if x != nil {
+		return x.ArchiveTimeBeg
+	}
+	return 0
+}
+
+func (x *GetArchiveLogReq) GetArchiveTimeEnd() int64 {
+	if x != nil {
+		return x.ArchiveTimeEnd
+	}
+	return 0
+}
+
+func (x *GetArchiveLogReq) GetVerCode() uint32 {
+	if x != nil {
+		return x.VerCode
+	}
+	return 0
+}
+
+func (x *GetArchiveLogReq) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *GetArchiveLogReq) GetLimit() int64 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type GetArchiveLogRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code    int32              `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	Total   int64              `protobuf:"varint,2,opt,name=Total,proto3" json:"Total,omitempty"`
+	LogList []*user.ArchiveLog `protobuf:"bytes,3,rep,name=LogList,proto3" json:"LogList,omitempty"`
+}
+
+func (x *GetArchiveLogRsp) Reset() {
+	*x = GetArchiveLogRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_cgi_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetArchiveLogRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetArchiveLogRsp) ProtoMessage() {}
+
+func (x *GetArchiveLogRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_cgi_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetArchiveLogRsp.ProtoReflect.Descriptor instead.
+func (*GetArchiveLogRsp) Descriptor() ([]byte, []int) {
+	return file_user_cgi_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetArchiveLogRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *GetArchiveLogRsp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *GetArchiveLogRsp) GetLogList() []*user.ArchiveLog {
+	if x != nil {
+		return x.LogList
+	}
+	return nil
+}
+
 var File_user_cgi_proto protoreflect.FileDescriptor
 
 var file_user_cgi_proto_rawDesc = []byte{
@@ -737,9 +896,31 @@ var file_user_cgi_proto_rawDesc = []byte{
 	0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x29, 0x0a, 0x09,
 	0x42, 0x61, 0x73, 0x69, 0x63, 0x4c, 0x69, 0x73, 0x74, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32,
 	0x0b, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x42, 0x61, 0x73, 0x69, 0x63, 0x52, 0x09, 0x42, 0x61,
-	0x73, 0x69, 0x63, 0x4c, 0x69, 0x73, 0x74, 0x42, 0x1f, 0x5a, 0x1d, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x69, 0x65, 0x67, 0x61, 0x64, 0x2f, 0x6d, 0x6d, 0x6f, 0x2f,
-	0x63, 0x67, 0x69, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x69, 0x63, 0x4c, 0x69, 0x73, 0x74, 0x22, 0xec, 0x01, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x41,
+	0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x4c, 0x6f, 0x67, 0x52, 0x65, 0x71, 0x12, 0x28, 0x0a, 0x04,
+	0x54, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x14, 0x2e, 0x75, 0x73, 0x65,
+	0x72, 0x2e, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x4c, 0x6f, 0x67, 0x54, 0x79, 0x70, 0x65,
+	0x52, 0x04, 0x54, 0x79, 0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x44, 0x12, 0x26,
+	0x0a, 0x0e, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x42, 0x65, 0x67,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0e, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x54,
+	0x69, 0x6d, 0x65, 0x42, 0x65, 0x67, 0x12, 0x26, 0x0a, 0x0e, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76,
+	0x65, 0x54, 0x69, 0x6d, 0x65, 0x45, 0x6e, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0e,
+	0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x45, 0x6e, 0x64, 0x12, 0x18,
+	0x0a, 0x07, 0x56, 0x65, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0d, 0x52,
+	0x07, 0x56, 0x65, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x4f, 0x66, 0x66, 0x73,
+	0x65, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x4f, 0x66, 0x66, 0x73, 0x65, 0x74,
+	0x12, 0x14, 0x0a, 0x05, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x05, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x22, 0x68, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x41, 0x72, 0x63,
+	0x68, 0x69, 0x76, 0x65, 0x4c, 0x6f, 0x67, 0x52, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x43, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x14,
+	0x0a, 0x05, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x54,
+	0x6f, 0x74, 0x61, 0x6c, 0x12, 0x2a, 0x0a, 0x07, 0x4c, 0x6f, 0x67, 0x4c, 0x69, 0x73, 0x74, 0x18,
+	0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x41, 0x72, 0x63,
+	0x68, 0x69, 0x76, 0x65, 0x4c, 0x6f, 0x67, 0x52, 0x07, 0x4c, 0x6f, 0x67, 0x4c, 0x69, 0x73, 0x74,
+	0x42, 0x1f, 0x5a, 0x1d, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x69,
+	0x65, 0x67, 0x61, 0x64, 0x2f, 0x6d, 0x6d, 0x6f, 0x2f, 0x63, 0x67, 0x69, 0x2f, 0x75, 0x73, 0x65,
+	0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -754,34 +935,40 @@ func file_user_cgi_proto_rawDescGZIP() []byte {
 	return file_user_cgi_proto_rawDescData
 }
 
-var file_user_cgi_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_user_cgi_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_user_cgi_proto_goTypes = []interface{}{
-	(*GetEntryReq)(nil), // 0: user.GetEntryReq
-	(*GetEntryRsp)(nil), // 1: user.GetEntryRsp
-	(*AddBasicReq)(nil), // 2: user.AddBasicReq
-	(*AddBasicRsp)(nil), // 3: user.AddBasicRsp
-	(*ModBasicReq)(nil), // 4: user.ModBasicReq
-	(*ModBasicRsp)(nil), // 5: user.ModBasicRsp
-	(*RmvBasicReq)(nil), // 6: user.RmvBasicReq
-	(*RmvBasicRsp)(nil), // 7: user.RmvBasicRsp
-	(*GetBasicReq)(nil), // 8: user.GetBasicReq
-	(*GetBasicRsp)(nil), // 9: user.GetBasicRsp
-	(*user.Entry)(nil),  // 10: user.Entry
-	(*user.Basic)(nil),  // 11: user.Basic
+	(*GetEntryReq)(nil),      // 0: user.GetEntryReq
+	(*GetEntryRsp)(nil),      // 1: user.GetEntryRsp
+	(*AddBasicReq)(nil),      // 2: user.AddBasicReq
+	(*AddBasicRsp)(nil),      // 3: user.AddBasicRsp
+	(*ModBasicReq)(nil),      // 4: user.ModBasicReq
+	(*ModBasicRsp)(nil),      // 5: user.ModBasicRsp
+	(*RmvBasicReq)(nil),      // 6: user.RmvBasicReq
+	(*RmvBasicRsp)(nil),      // 7: user.RmvBasicRsp
+	(*GetBasicReq)(nil),      // 8: user.GetBasicReq
+	(*GetBasicRsp)(nil),      // 9: user.GetBasicRsp
+	(*GetArchiveLogReq)(nil), // 10: user.GetArchiveLogReq
+	(*GetArchiveLogRsp)(nil), // 11: user.GetArchiveLogRsp
+	(*user.Entry)(nil),       // 12: user.Entry
+	(*user.Basic)(nil),       // 13: user.Basic
+	(user.ArchiveLogType)(0), // 14: user.ArchiveLogType
+	(*user.ArchiveLog)(nil),  // 15: user.ArchiveLog
 }
 var file_user_cgi_proto_depIdxs = []int32{
-	10, // 0: user.GetEntryRsp.EntryList:type_name -> user.Entry
-	11, // 1: user.AddBasicReq.Basic:type_name -> user.Basic
-	11, // 2: user.AddBasicRsp.Basic:type_name -> user.Basic
-	11, // 3: user.ModBasicReq.Basic:type_name -> user.Basic
-	11, // 4: user.ModBasicRsp.Basic:type_name -> user.Basic
-	11, // 5: user.RmvBasicRsp.Basic:type_name -> user.Basic
-	11, // 6: user.GetBasicRsp.BasicList:type_name -> user.Basic
-	7,  // [7:7] is the sub-list for method output_type
-	7,  // [7:7] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	12, // 0: user.GetEntryRsp.EntryList:type_name -> user.Entry
+	13, // 1: user.AddBasicReq.Basic:type_name -> user.Basic
+	13, // 2: user.AddBasicRsp.Basic:type_name -> user.Basic
+	13, // 3: user.ModBasicReq.Basic:type_name -> user.Basic
+	13, // 4: user.ModBasicRsp.Basic:type_name -> user.Basic
+	13, // 5: user.RmvBasicRsp.Basic:type_name -> user.Basic
+	13, // 6: user.GetBasicRsp.BasicList:type_name -> user.Basic
+	14, // 7: user.GetArchiveLogReq.Type:type_name -> user.ArchiveLogType
+	15, // 8: user.GetArchiveLogRsp.LogList:type_name -> user.ArchiveLog
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_user_cgi_proto_init() }
@@ -910,6 +1097,30 @@ func file_user_cgi_proto_init() {
 				return nil
 			}
 		}
+		file_user_cgi_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetArchiveLogReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_cgi_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetArchiveLogRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -917,7 +1128,7 @@ func file_user_cgi_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_user_cgi_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -10,6 +10,7 @@ import (
 	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/ds/user"
 	ds "github.com/iegad/mmo/ds/user"
+	"github.com/iegad/mmo/dsl/user/internal/dao/archive_log"
 	"github.com/iegad/mmo/dsl/user/internal/dao/entry"
 	"github.com/olivere/elastic/v7"
 )
@@ -42,8 +43,20 @@ func ModBasic(obj *ds.Basic, db *sql.DB, es *elastic.Client) error {
 		return err
 	}
 
-	// TODO: 记录存档日志
-	return err
+	err = archive_log.AddArchiveLog(&ds.ArchiveLog{
+		Type:        ds.ArchiveLogType_ArchiveLogType_Basic,
+		VerCode:     obj.VerCode,
+		UserID:      raw.Entry.UserID,
+		ArchiveTime: time.Now().Unix(),
+		Raw:         utils.PbToBytes(raw),
+		Changed:     utils.PbToBytes(obj),
+	}, es)
+
+	if err != nil {
+		log.Error(err)
+	}
+
+	return nil
 }
 
 func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {

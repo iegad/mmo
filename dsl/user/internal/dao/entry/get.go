@@ -34,12 +34,12 @@ func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, e
 			return nil, -1, cgi.ErrGender
 		}
 
-		query = query.Must(elastic.NewTermQuery("Gender", cond.Gender))
+		query.Must(elastic.NewTermQuery("Gender", cond.Gender))
 		hasCond = true
 	}
 
 	if cond.UserID > 0 {
-		query = query.Must(elastic.NewTermQuery("UserID", cond.UserID))
+		query.Must(elastic.NewTermQuery("UserID", cond.UserID))
 		hasCond = true
 	}
 
@@ -64,7 +64,7 @@ func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, e
 			or.Should(elastic.NewMatchPhrasePrefixQuery("Email", cond.Key))
 		}
 
-		query = query.Must(or)
+		query.Must(or)
 		hasCond = true
 	}
 
@@ -73,9 +73,9 @@ func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, e
 	}
 
 	// Step 2: 构建搜索对象
-	search := es.Search().Index(dao.N_USER_ENTRY).Query(query)
+	search := es.Search().Index(dao.N_USER_ENTRY).Query(query).From(int(cond.Offset))
 	if cond.Limit > 0 {
-		search = search.From(int(cond.Offset)).Size(int(cond.Limit))
+		search.Size(int(cond.Limit))
 	}
 
 	result, err := search.Do(context.TODO())

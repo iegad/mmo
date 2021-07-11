@@ -45,5 +45,17 @@ func initElastic() error {
 		}
 	}
 
+	exists, err = Elastic.IndexExists(dao.N_USER_ARCHIVE_LOG).Do(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		_, err = Elastic.CreateIndex(dao.N_USER_ARCHIVE_LOG).Do(ctx)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

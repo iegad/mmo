@@ -64,6 +64,5 @@ func RmvBasic(userID int64, db *sql.DB, es *elastic.Client) error {
 		return err
 	}
 
-	// TODO: 记录存档日志
 	return err
 }

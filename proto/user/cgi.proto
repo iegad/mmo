@@ -71,3 +71,20 @@ message GetBasicRsp {
   repeated user.Basic BasicList = 3;
 }
 
+// ----------------- Basic -----------------
+message GetArchiveLogReq {
+  user.ArchiveLogType Type           = 1;
+  int64               UserID         = 2;
+  int64               ArchiveTimeBeg = 3;
+  int64               ArchiveTimeEnd = 4;
+  uint32              VerCode        = 5;
+  int64               Offset         = 6;
+  int64               Limit          = 7;
+}
+
+message GetArchiveLogRsp {
+  int32                    Code    = 1;
+  int64                    Total   = 2;
+  repeated user.ArchiveLog LogList = 3;
+}
+
