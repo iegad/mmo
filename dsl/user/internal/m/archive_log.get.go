@@ -12,6 +12,21 @@ import (
 func (this_ *UserService) GetArchiveLog(ctx *piper.Context, req *user.GetArchiveLogReq, rsp *user.GetArchiveLogRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "GetArchiveLog in params is invalid")
 
+	if req.ArchiveTimeBeg < 0 {
+		rsp.Code = -1
+		return nil
+	}
+
+	if req.ArchiveTimeEnd < 0 {
+		rsp.Code = -2
+		return nil
+	}
+
+	if req.UserID <= 0 {
+		rsp.Code = -3
+		return nil
+	}
+
 	dataList, total, err := archive_log.GetArchiveLog(req, com.Elastic)
 	if err != nil {
 		log.Error(err)

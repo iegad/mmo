@@ -26,6 +26,11 @@ func (this_ *UserService) GetEntry(ctx *piper.Context, req *user.GetEntryReq, rs
 		return nil
 	}
 
+	if req.UserID <= 0 && req.Gender == 0 && len(req.Key) == 0 && req.Limit == 0 {
+		rsp.Code = -1
+		return nil
+	}
+
 	dataList, total, err := entry.GetEntry(req, com.Elastic)
 	if err != nil {
 		log.Error(err)

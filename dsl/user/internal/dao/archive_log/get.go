@@ -5,7 +5,6 @@ import (
 	"reflect"
 
 	"github.com/iegad/kraken/utils"
-	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/cgi/user"
 	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/dao"
@@ -20,32 +19,23 @@ func GetArchiveLog(cond *user.GetArchiveLogReq, es *elastic.Client) ([]*ds.Archi
 	utils.Assert(cond != nil && es != nil, "GetArchiveLog in params is invalid")
 
 	var (
-		query   = elastic.NewBoolQuery()
-		hasCond = false
+		query = elastic.NewBoolQuery()
 	)
 
 	if cond.UserID > 0 {
 		query.Must(elastic.NewTermQuery("UserID", cond.UserID))
-		hasCond = true
 	}
 
 	if cond.VerCode > 0 {
 		query.Must(elastic.NewTermQuery("VerCode", cond.VerCode))
-		hasCond = true
 	}
 
 	if cond.ArchiveTimeBeg > 0 {
 		query.Must(elastic.NewRangeQuery("ArchiveTime").Gte(cond.ArchiveTimeBeg))
-		hasCond = true
 	}
 
 	if cond.ArchiveTimeEnd > 0 {
 		query.Must(elastic.NewRangeQuery("ArchiveTime").Lt(cond.ArchiveTimeEnd))
-		hasCond = true
-	}
-
-	if !hasCond {
-		return nil, -1, cgi.ErrNoCond
 	}
 
 	search := es.Search().Index(dao.N_USER_ARCHIVE_LOG).Query(query).From(int(cond.Offset))

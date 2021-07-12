@@ -5,7 +5,6 @@ import (
 	"github.com/iegad/kraken/piper"
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/cgi/user"
-	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/com"
 	"github.com/iegad/mmo/dsl/user/internal/dao/basic"
 )
@@ -13,29 +12,20 @@ import (
 func (this_ *UserService) RmvBasic(ctx *piper.Context, req *user.RmvBasicReq, rsp *user.RmvBasicRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "RmvBasic in params is invalid")
 
-	var (
-		err error
-		raw *ds.Basic
-	)
-
-	for dwf := true; dwf; dwf = false {
-		raw, err = basic.GetBasicByID(req.UserID, com.MySql)
-		if err != nil {
-			break
-		}
-
-		err = basic.RmvBasic(req.UserID, com.MySql, com.Elastic)
-		if err != nil {
-			break
-		}
-	}
-
+	raw, err := basic.GetBasicByID(req.UserID, com.MySql)
 	if err != nil {
 		log.Error(err)
-		rsp.Code = -100
-	} else {
-		rsp.Basic = raw
+		rsp.Code = -10000
+		return nil
 	}
 
+	err = basic.RmvBasic(req.UserID, com.MySql, com.Elastic)
+	if err != nil {
+		log.Error(err)
+		rsp.Code = -10000
+		return nil
+	}
+
+	rsp.Basic = raw
 	return nil
 }

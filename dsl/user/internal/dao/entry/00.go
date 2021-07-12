@@ -24,3 +24,12 @@ func ExistsEmail(email string, es *elastic.Client) (bool, error) {
 
 	return res.TotalHits() > 0, nil
 }
+
+func ExistsUserID(userID int64, es *elastic.Client) (bool, error) {
+	res, err := es.Exists().Index(dao.N_USER_ENTRY).Id(dao.IDToString(userID)).Do(context.TODO())
+	if err != nil {
+		return false, err
+	}
+
+	return res, nil
+}

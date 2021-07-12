@@ -5,9 +5,7 @@ import (
 	"reflect"
 	"unicode/utf8"
 
-	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/utils"
-	"github.com/iegad/mmo/cgi"
 	"github.com/iegad/mmo/cgi/user"
 	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/dao"
@@ -24,33 +22,20 @@ func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, e
 	utils.Assert(cond != nil && es != nil, "GetEntry in params is invalid")
 
 	// Step 1: 构建查询条件
-	var (
-		query   = elastic.NewBoolQuery()
-		hasCond = false
-	)
+	query := elastic.NewBoolQuery()
 
 	if cond.Gender > 0 {
-		if cond.Gender < ds.MIN_GENDER || cond.Gender > ds.MAX_GENDER {
-			return nil, -1, cgi.ErrGender
-		}
-
 		query.Must(elastic.NewTermQuery("Gender", cond.Gender))
-		hasCond = true
 	}
 
 	if cond.UserID > 0 {
 		query.Must(elastic.NewTermQuery("UserID", cond.UserID))
-		hasCond = true
 	}
 
 	if len(cond.Key) > 0 {
 		or := elastic.NewBoolQuery()
 
 		klen := utf8.RuneCountInString(cond.Key)
-
-		if klen > ds.MAX_EMAIL {
-			return nil, -1, cgi.ErrKey
-		}
 
 		if klen <= ds.MAX_NICKNAME {
 			or.Should(elastic.NewMatchPhrasePrefixQuery("Nickname", cond.Key))
@@ -65,11 +50,6 @@ func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, e
 		}
 
 		query.Must(or)
-		hasCond = true
-	}
-
-	if !hasCond {
-		return nil, -1, cgi.ErrNoCond
 	}
 
 	// Step 2: 构建搜索对象
@@ -96,28 +76,19 @@ func GetEntry(cond *user.GetEntryReq, es *elastic.Client) ([]*ds.Entry, int64, e
 }
 
 // GetEntryByID 通过UserID在ES中查询用户条目
-//  @PS: 查询结果的Entry不需要释放
 func GetEntryByID(userID int64, es *elastic.Client) (*ds.Entry, error) {
 	utils.Assert(userID > 0 && es != nil, "GetEntryByID in params is invalid")
 
 	res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("UserID", dao.IDToString(userID))).Do(context.TODO())
 	if err != nil {
-		log.Error(err)
-		return nil, cgi.ErrESInner
+		return nil, err
 	}
 
 	if res.TotalHits() != 1 {
-		return nil, cgi.ErrUserID
+		return nil, nil
 	}
 
-	var (
-		list      = res.Each(refType)
-		entry, ok = list[0].(*ds.Entry)
-	)
-
-	if !ok {
-		return nil, cgi.ErrESDataType
-	}
-
+	list := res.Each(refType)
+	entry := list[0].(*ds.Entry)
 	return entry, nil
 }

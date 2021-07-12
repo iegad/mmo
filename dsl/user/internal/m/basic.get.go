@@ -17,7 +17,7 @@ func (this_ *UserService) GetBasic(ctx *piper.Context, req *user.GetBasicReq, rs
 		basic, err := basic.GetBasicByID(req.UserID, com.MySql)
 		if err != nil {
 			log.Error(err)
-			rsp.Code = -100
+			rsp.Code = -10000
 		} else {
 			rsp.BasicList = append([]*ds.Basic{}, basic)
 			rsp.Total = int64(len(rsp.BasicList))
@@ -26,10 +26,55 @@ func (this_ *UserService) GetBasic(ctx *piper.Context, req *user.GetBasicReq, rs
 		return nil
 	}
 
+	if req.UserID < 0 {
+		rsp.Code = -3
+		return nil
+	}
+
+	if req.CreateTimeBeg < 0 {
+		rsp.Code = -4
+		return nil
+	}
+
+	if req.CreateTimeEnd < 0 {
+		rsp.Code = -5
+		return nil
+	}
+
+	if req.LastUpdateBeg < 0 {
+		rsp.Code = -6
+		return nil
+	}
+
+	if req.LastUpdateEnd < 0 {
+		rsp.Code = -7
+		return nil
+	}
+
+	if req.Offset < 0 {
+		rsp.Code = -8
+		return nil
+	}
+
+	if req.Limit < 0 {
+		rsp.Code = -9
+		return nil
+	}
+
+	if len(req.PhoneNum) > ds.MAX_PHONE_NUM {
+		rsp.Code = -11
+		return nil
+	}
+
+	if len(req.Email) > ds.MAX_EMAIL {
+		rsp.Code = -12
+		return nil
+	}
+
 	dataList, total, err := basic.GetBasic(req, com.MySql)
 	if err != nil {
 		log.Error(err)
-		rsp.Code = -100
+		rsp.Code = -10000
 	} else {
 		rsp.BasicList = dataList
 		rsp.Total = total

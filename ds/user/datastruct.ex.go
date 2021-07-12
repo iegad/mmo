@@ -5,13 +5,12 @@ import (
 )
 
 const (
-	MIN_USER_ID   = 1
 	MAX_EMAIL     = 50
 	MAX_PHONE_NUM = 15
 	MIN_GENDER    = 1
 	MAX_GENDER    = 3
 	MAX_NICKNAME  = 8
-	MAX_AVATOR    = 500
+	MAX_AVATOR    = 120
 )
 
 var poolEntry = sync.Pool{
