@@ -8,6 +8,7 @@ const (
 	N_USER_ENTRY       = "user_entry"
 	N_USER_ARCHIVE_LOG = "user_archive_log"
 	T_USER_BASIC       = "`DB_USER`.`T_BASIC`"
+	T_USER_PERSONAL    = "`DB_USER`.`T_PERSONAL`"
 )
 
 var (
@@ -20,6 +21,16 @@ var (
 		"LastUpdate": "F_LAST_UPDATE",
 		"Nickname":   "F_NICKNAME",
 		"VerCode":    "F_VER_CODE",
+	}
+
+	TUserPersonalFieldMap = map[string]string{
+		"UserID":      "F_USER_ID",
+		"Name":        "F_NAME",
+		"Nationality": "F_NATIONALITY",
+		"Gender":      "F_GENDER",
+		"Birth":       "F_BIRTH",
+		"ID":          "F_ID",
+		"VerCode":     "F_VER_CODE",
 	}
 )
 

@@ -58,7 +58,7 @@ func AddEntry(obj *ds.Entry, es *elastic.Client) error {
 
 	// Step 3: 检查邮箱是否被使用
 	if len(obj.Email) > 0 {
-		found, err := existsEmail(obj.Email, es)
+		found, err := ExistsEmail(obj.Email, es)
 		if err != nil {
 			log.Error(err)
 			return cgi.ErrESInner
@@ -71,7 +71,7 @@ func AddEntry(obj *ds.Entry, es *elastic.Client) error {
 
 	// Step 4: 检查手机号是否被使用
 	if len(obj.PhoneNum) > 0 {
-		found, err := existsPhoneNum(obj.PhoneNum, es)
+		found, err := ExistsPhoneNum(obj.PhoneNum, es)
 		if err != nil {
 			log.Error(err)
 			return cgi.ErrESInner
@@ -90,22 +90,4 @@ func AddEntry(obj *ds.Entry, es *elastic.Client) error {
 	}
 
 	return err
-}
-
-func existsPhoneNum(phoneNum string, es *elastic.Client) (bool, error) {
-	res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("PhoneNum", phoneNum)).Do(context.TODO())
-	if err != nil {
-		return false, err
-	}
-
-	return res.TotalHits() > 0, nil
-}
-
-func existsEmail(email string, es *elastic.Client) (bool, error) {
-	res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", email)).Do(context.TODO())
-	if err != nil {
-		return false, err
-	}
-
-	return res.TotalHits() > 0, nil
 }

@@ -49,13 +49,12 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		}
 
 		if obj.Email != raw.Email {
-			res, err := es.Search().Index(dao.N_USER_ENTRY).Query(elastic.NewTermQuery("Email", obj.Email)).Do(context.TODO())
+			found, err := ExistsEmail(obj.Email, es)
 			if err != nil {
-				log.Error(err)
-				return cgi.ErrESInner
+				return err
 			}
 
-			if res.TotalHits() != 0 {
+			if found {
 				return cgi.ErrEmailExists
 			}
 
@@ -70,7 +69,7 @@ func ModEntry(obj *ds.Entry, es *elastic.Client) error {
 		}
 
 		if obj.PhoneNum != raw.PhoneNum {
-			found, err := existsPhoneNum(obj.PhoneNum, es)
+			found, err := ExistsPhoneNum(obj.PhoneNum, es)
 			if err != nil {
 				log.Error(err)
 				return cgi.ErrESInner

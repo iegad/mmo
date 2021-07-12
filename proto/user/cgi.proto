@@ -8,11 +8,11 @@ import "user/datastruct.proto";
 // ----------------- Entry -----------------
 
 message GetEntryReq {
-  int64  UserID  = 1;
-  int32  Gender  = 2;
-  string Key     = 3;
-  int64  Offset  = 4;
-  int64  Limit   = 5;
+  int32  Gender  = 1;
+  int64  UserID  = 2;
+  int64  Offset  = 3;
+  int64  Limit   = 4;
+  string Key     = 5;
 }
 
 message GetEntryRsp {
@@ -51,18 +51,18 @@ message RmvBasicRsp {
 }
 
 message GetBasicReq {
-  int64  UserID        = 1;
+  bool   Desc          = 1;
   int32  Gender        = 2;
-  string PhoneNum      = 3;
-  string Email         = 4;
-  int64  CreateTimeBeg = 5;
-  int64  CreateTimeEnd = 6;
-  int64  LastUpdateBeg = 7;
-  int64  LastUpdateEnd = 8;
-  int64  Offset        = 9;
-  int64  Limit         = 10;
-  string OrderBy       = 11;
-  bool   Desc          = 12;
+  int64  UserID        = 3;
+  int64  CreateTimeBeg = 4;
+  int64  CreateTimeEnd = 5;
+  int64  LastUpdateBeg = 6;
+  int64  LastUpdateEnd = 7;
+  int64  Offset        = 8;
+  int64  Limit         = 9;
+  string OrderBy       = 10;
+  string PhoneNum      = 11;
+  string Email         = 12;
 }
 
 message GetBasicRsp {
@@ -74,10 +74,10 @@ message GetBasicRsp {
 // ----------------- Basic -----------------
 message GetArchiveLogReq {
   user.ArchiveLogType Type           = 1;
-  int64               UserID         = 2;
-  int64               ArchiveTimeBeg = 3;
-  int64               ArchiveTimeEnd = 4;
-  uint32              VerCode        = 5;
+  uint32              VerCode        = 2;
+  int64               UserID         = 3;
+  int64               ArchiveTimeBeg = 4;
+  int64               ArchiveTimeEnd = 5;
   int64               Offset         = 6;
   int64               Limit          = 7;
 }
@@ -88,3 +88,33 @@ message GetArchiveLogRsp {
   repeated user.ArchiveLog LogList = 3;
 }
 
+// ----------------- Personal -----------------
+message AddPersonalReq {
+  user.Personal Personal = 1;
+}
+
+message AddPersonalRsp {
+  int32 Code = 1;
+}
+
+message ModPersonalReq {
+  user.Personal Personal = 1;
+}
+
+message ModPersonalRsp {
+  int32 Code = 1;
+}
+
+message GetPersonalReq {
+  bool   Desc        = 1;
+  int32  Gender      = 2;
+  int32  Nationality = 3;
+  int64  UserID      = 4;
+  int64  BirthBeg    = 5;
+  int64  BirthEnd    = 6;
+  int64  Offset      = 7;
+  int64  Limit       = 8;
+  string Name        = 9;
+  string OrderBy     = 10;
+  string ID          = 11;
+}
