@@ -7,6 +7,7 @@ import (
 const (
 	N_USER_ENTRY       = "user_entry"
 	N_USER_ARCHIVE_LOG = "user_archive_log"
+	N_USER_LOGIN_LOG   = "user_login_log"
 	T_USER_BASIC       = "`DB_USER`.`T_BASIC`"
 	T_USER_PERSONAL    = "`DB_USER`.`T_PERSONAL`"
 )

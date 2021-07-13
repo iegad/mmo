@@ -4,6 +4,7 @@ package user;
 option go_package = "github.com/iegad/mmo/cgi/user";
 
 import "user/datastruct.proto";
+import "common.proto";
 
 // ----------------- Entry -----------------
 
@@ -123,4 +124,30 @@ message GetPersonalRsp {
   int32                  Code         = 1;
   int64                  Total        = 2;
   repeated user.Personal PersonalList = 3;
+}
+
+// ----------------- LoginLog -----------------
+message AddLoginLogReq {
+  user.LoginLog LoginLog = 1;
+}
+
+message AddLoginLogRsp {
+  int32 Code = 1;
+}
+
+message GetLoginLogReq {
+  common.OSType OSType       = 1;
+  int32         DeviceType   = 2;
+  int64         UserID       = 3;
+  int64         LoginTimeBeg = 4;
+  int64         LoginTimeEnd = 5;
+  int64         Offset       = 6;
+  int64         Limit        = 7;
+  string        MountAddr    = 8;
+}
+
+message GetLoginLogRsp {
+  int32                  Code    = 1;
+  int64                  Total   = 2;
+  repeated user.LoginLog LogList = 3;
 }
