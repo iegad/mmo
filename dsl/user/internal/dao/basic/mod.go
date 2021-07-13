@@ -2,10 +2,10 @@ package basic
 
 import (
 	"database/sql"
-	"encoding/hex"
+	"errors"
 	"time"
 
-	"github.com/iegad/kraken/security"
+	"github.com/iegad/kraken/log"
 	"github.com/iegad/kraken/utils"
 	"github.com/iegad/mmo/ds/user"
 	ds "github.com/iegad/mmo/ds/user"
@@ -17,46 +17,24 @@ import (
 func ModBasic(obj *ds.Basic, db *sql.DB, es *elastic.Client) error {
 	utils.Assert(obj != nil && &obj.Entry != nil && db != nil && es != nil, "ModBasic in params is invalid")
 
-	var (
-		err error
-		raw *ds.Basic
-	)
+	var err error
 
 	for i := 0; i < 3; i++ {
-		raw, err = GetBasicByID(obj.Entry.UserID, db)
-		if err != nil {
-			return err
-		}
-
-		err = updateBasic(obj, raw, db, es)
+		err = updateBasic(obj, db, es)
 		if err == nil {
 			break
 		}
 	}
 
+	return err
+}
+
+func updateBasic(obj *user.Basic, db *sql.DB, es *elastic.Client) error {
+	raw, err := GetBasicByID(obj.Entry.UserID, db)
 	if err != nil {
 		return err
 	}
 
-	rawData := utils.PbToBytes(raw)
-	objData := utils.PbToBytes(raw)
-
-	// 当数据有改变时才需要记录修改日志
-	if hex.EncodeToString(security.MD5(rawData)) != hex.EncodeToString(security.MD5(objData)) {
-		err = archive_log.AddArchiveLog(&ds.ArchiveLog{
-			Type:        ds.ArchiveLogType_ArchiveLogType_Basic,
-			VerCode:     obj.VerCode,
-			UserID:      raw.Entry.UserID,
-			ArchiveTime: time.Now().Unix(),
-			Raw:         rawData,
-			Changed:     objData,
-		}, es)
-	}
-
-	return err
-}
-
-func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 	n := 0
 
 	if len(obj.Entry.Email) == 0 {
@@ -98,11 +76,22 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		return err
 	}
 
-	_, err = tx.Exec("UPDATE `DB_USER`.`T_BASIC` SET F_EMAIL=?,F_PHONE_NUM=?,F_GENDER=?,F_NICKNAME=?,F_AVATOR=?,F_VER_CODE=? WHERE F_USER_ID=? AND F_VER_CODE=?",
+	res, err := tx.Exec("UPDATE `DB_USER`.`T_BASIC` SET F_EMAIL=?,F_PHONE_NUM=?,F_GENDER=?,F_NICKNAME=?,F_AVATOR=?,F_VER_CODE=? WHERE F_USER_ID=? AND F_VER_CODE=?",
 		utils.IF_STR_EMPTY(obj.Entry.Email), utils.IF_STR_EMPTY(obj.Entry.PhoneNum), obj.Entry.Gender, obj.Entry.Nickname, obj.Entry.Avator, obj.VerCode, obj.Entry.UserID, raw.VerCode)
 	if err != nil {
 		tx.Rollback()
 		return err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if affected != 1 {
+		tx.Rollback()
+		return errors.New("no row affected")
 	}
 
 	err = entry.ModEntry(obj.Entry, es)
@@ -111,5 +100,22 @@ func updateBasic(obj, raw *user.Basic, db *sql.DB, es *elastic.Client) error {
 		return err
 	}
 
-	return tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	err = archive_log.AddArchiveLog(&ds.ArchiveLog{
+		Type:        ds.ArchiveLogType_ArchiveLogType_Basic,
+		VerCode:     obj.VerCode,
+		UserID:      raw.Entry.UserID,
+		ArchiveTime: time.Now().Unix(),
+		Raw:         utils.PbToBytes(raw),
+		Changed:     utils.PbToBytes(obj),
+	}, es)
+	if err != nil {
+		log.Error(err)
+	}
+
+	return nil
 }

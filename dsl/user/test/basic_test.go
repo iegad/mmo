@@ -2,6 +2,7 @@ package test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/iegad/kraken/conf"
 	"github.com/iegad/kraken/piper"
@@ -86,7 +87,7 @@ func TestRmvBasic(t *testing.T) {
 	defer pc.Close()
 
 	req := &user.RmvBasicReq{
-		UserID: 2,
+		UserID: 1,
 	}
 
 	rsp := &user.RmvBasicRsp{}
@@ -155,6 +156,85 @@ func TestGetArchiveLog(t *testing.T) {
 	rsp := &user.GetArchiveLogRsp{}
 
 	err = pc.Call("GetArchiveLog", req, rsp)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Log(utils.PbToJson(rsp))
+}
+
+func TestAddPersonal(t *testing.T) {
+	pc, err := getClient()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer pc.Close()
+
+	birth, _ := time.Parse("2006-01-02", "1987-07-22")
+
+	req := &user.AddPersonalReq{
+		Personal: &ds.Personal{
+			UserID:      1,
+			Name:        "肖琪",
+			Nationality: "+86",
+			ID:          "420107198707221515",
+			Gender:      1,
+			Birth:       birth.Unix(),
+		},
+	}
+	rsp := &user.AddPersonalRsp{}
+
+	err = pc.Call("AddPersonal", req, rsp)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Log(utils.PbToJson(rsp))
+}
+
+func TestModPersonal(t *testing.T) {
+	pc, err := getClient()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer pc.Close()
+
+	req := &user.ModPersonalReq{
+		Personal: &ds.Personal{
+			UserID:      1,
+			Nationality: "+852",
+		},
+	}
+	rsp := &user.ModPersonalRsp{}
+
+	err = pc.Call("ModPersonal", req, rsp)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Log(utils.PbToJson(rsp))
+}
+
+func TestGetPersonal(t *testing.T) {
+	pc, err := getClient()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer pc.Close()
+
+	req := &user.GetPersonalReq{}
+	rsp := &user.GetPersonalRsp{}
+
+	err = pc.Call("GetPersonal", req, rsp)
 	if err != nil {
 		t.Error(err)
 		return

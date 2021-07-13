@@ -108,12 +108,19 @@ func GetBasic(cond *user.GetBasicReq, db *sql.DB) ([]*ds.Basic, int64, error) {
 		sb.WriteString(fmt.Sprintf(" LIMIT %d OFFSET %d", cond.Limit, cond.Offset))
 	}
 
-	var (
-		rows, err = db.Query(sb.String())
-		dataList  = []*ds.Basic{}
-		total     int64
-	)
+	var total int64
+	row := db.QueryRow(sbc.String())
+	err := row.Scan(&total)
+	if err != nil {
+		return nil, -1, err
+	}
 
+	if total == 0 {
+		return nil, 0, nil
+	}
+
+	dataList := []*ds.Basic{}
+	rows, err := db.Query(sb.String())
 	if err != nil {
 		return nil, -1, err
 	}
@@ -143,13 +150,6 @@ func GetBasic(cond *user.GetBasicReq, db *sql.DB) ([]*ds.Basic, int64, error) {
 	}
 
 	rows.Close()
-	if err != nil {
-		return nil, -1, err
-	}
-
-	row := db.QueryRow(sbc.String())
-	err = row.Scan(&total)
-
 	if err != nil {
 		return nil, -1, err
 	}

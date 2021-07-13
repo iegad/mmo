@@ -31,25 +31,13 @@ message Basic {
 // 用户个人信息
 //  存放于MySQL
 message Personal {
-  int32  Nationality = 1; // 国籍
-  int32  Gender      = 2; // 性别
-  uint32 VerCode     = 3; // 版本号
-  int64  UserID      = 4; // 用户ID
-  int64  Birth       = 5; // 出生
-  string Name        = 6; // 姓名
-  string ID          = 7; // 身份证号
-}
-
-// 用户会话
-//  存放于Redis中
-//  @相关操作: SET, DEL, GET
-message Session {
-  common.OSType OS         = 1; // 操作系统
-  int64         ActiveTime = 2; // 会话激活时间
-  bytes         Token      = 3; // 令牌
-  bytes         DeviceCode = 4; // 设备编码: md5(deviceType:operatingSystem:deviceUniqueIdentifier:macAddr)
-  string        MountAddr  = 5; // 登录网关(挂载点)地址
-  Entry         Entry      = 6; // 用户信息
+  int32  Gender      = 1; // 性别
+  uint32 VerCode     = 2; // 版本号
+  int64  UserID      = 3; // 用户ID
+  int64  Birth       = 4; // 出生
+  string Name        = 5; // 姓名
+  string ID          = 6; // 身份证号
+  string Nationality = 7; // 国籍
 }
 
 // 用户关系

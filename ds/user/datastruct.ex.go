@@ -5,12 +5,15 @@ import (
 )
 
 const (
-	MAX_EMAIL     = 50
-	MAX_PHONE_NUM = 15
-	MIN_GENDER    = 1
-	MAX_GENDER    = 3
-	MAX_NICKNAME  = 8
-	MAX_AVATOR    = 120
+	MAX_EMAIL       = 50
+	MAX_PHONE_NUM   = 15
+	MIN_GENDER      = 1
+	MAX_GENDER      = 3
+	MAX_NICKNAME    = 8
+	MAX_AVATOR      = 120
+	MAX_NAME        = 20
+	MAX_ID          = 18
+	MAX_NATIONALITY = 5
 )
 
 var poolEntry = sync.Pool{
@@ -53,20 +56,6 @@ func NewPersonal() *Personal {
 
 func DeletePersonal(obj *Personal) {
 	poolPersonal.Put(obj)
-}
-
-var poolSession = sync.Pool{
-	New: func() interface{} {
-		return &Session{}
-	},
-}
-
-func NewSession() *Session {
-	return poolSession.Get().(*Session)
-}
-
-func DeleteSession(obj *Session) {
-	poolSession.Put(obj)
 }
 
 var poolRelation = sync.Pool{

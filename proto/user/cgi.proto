@@ -108,13 +108,19 @@ message ModPersonalRsp {
 message GetPersonalReq {
   bool   Desc        = 1;
   int32  Gender      = 2;
-  int32  Nationality = 3;
-  int64  UserID      = 4;
-  int64  BirthBeg    = 5;
-  int64  BirthEnd    = 6;
-  int64  Offset      = 7;
-  int64  Limit       = 8;
-  string Name        = 9;
-  string OrderBy     = 10;
-  string ID          = 11;
+  int64  UserID      = 3;
+  int64  BirthBeg    = 4;
+  int64  BirthEnd    = 5;
+  int64  Offset      = 6;
+  int64  Limit       = 7;
+  string Name        = 8;
+  string OrderBy     = 9;
+  string ID          = 10;
+  string Nationality = 11;
+}
+
+message GetPersonalRsp {
+  int32                  Code         = 1;
+  int64                  Total        = 2;
+  repeated user.Personal PersonalList = 3;
 }

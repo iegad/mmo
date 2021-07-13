@@ -22,7 +22,7 @@ func (this_ *UserService) RmvBasic(ctx *piper.Context, req *user.RmvBasicReq, rs
 	err = basic.RmvBasic(req.UserID, com.MySql, com.Elastic)
 	if err != nil {
 		log.Error(err)
-		rsp.Code = -10000
+		rsp.Code = -10001
 		return nil
 	}
 
