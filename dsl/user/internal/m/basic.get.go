@@ -7,9 +7,11 @@ import (
 	"github.com/iegad/mmo/cgi/user"
 	ds "github.com/iegad/mmo/ds/user"
 	"github.com/iegad/mmo/dsl/user/internal/com"
+	"github.com/iegad/mmo/dsl/user/internal/dao"
 	"github.com/iegad/mmo/dsl/user/internal/dao/basic"
 )
 
+// GetBasic 获取用户基础信息
 func (this_ *UserService) GetBasic(ctx *piper.Context, req *user.GetBasicReq, rsp *user.GetBasicRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "GetBasic in params is invalid")
 
@@ -59,6 +61,13 @@ func (this_ *UserService) GetBasic(ctx *piper.Context, req *user.GetBasicReq, rs
 	if req.Limit < 0 {
 		rsp.Code = -9
 		return nil
+	}
+
+	if len(req.OrderBy) > 0 {
+		if _, ok := dao.TUserBasicFieldMap[req.OrderBy]; !ok {
+			rsp.Code = -10
+			return nil
+		}
 	}
 
 	if len(req.PhoneNum) > ds.MAX_PHONE_NUM {

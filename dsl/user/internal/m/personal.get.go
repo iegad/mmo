@@ -16,46 +16,56 @@ import (
 func (this_ *UserService) GetPersonal(ctx *piper.Context, req *user.GetPersonalReq, rsp *user.GetPersonalRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "GetPersonal in parmas is invalid")
 
-	if req.BirthBeg < 0 {
-		rsp.Code = -1
-		return nil
-	}
-
-	if req.BirthEnd < 0 {
-		rsp.Code = -1
-		return nil
-	}
-
 	if req.Gender > 0 && req.Gender != 1 && req.Gender != 2 {
 		rsp.Code = -2
 		return nil
 	}
 
-	if len(req.ID) > ds.MAX_ID {
+	if req.UserID < 0 {
 		rsp.Code = -3
 		return nil
 	}
 
-	if utf8.RuneCountInString(req.Name) > ds.MAX_NAME {
+	if req.BirthBeg < 0 {
 		rsp.Code = -4
 		return nil
 	}
 
-	if len(req.Nationality) > ds.MAX_NATIONALITY {
+	if req.BirthEnd < 0 {
 		rsp.Code = -5
 		return nil
 	}
 
-	if req.UserID < 0 {
+	if req.Offset < 0 {
 		rsp.Code = -6
+		return nil
+	}
+
+	if req.Limit < 0 {
+		rsp.Code = -7
+		return nil
+	}
+
+	if utf8.RuneCountInString(req.Name) > ds.MAX_NAME {
+		rsp.Code = -8
 		return nil
 	}
 
 	if len(req.OrderBy) > 0 {
 		if _, ok := dao.TUserPersonalFieldMap[req.OrderBy]; !ok {
-			rsp.Code = -7
+			rsp.Code = -8
 			return nil
 		}
+	}
+
+	if len(req.ID) > ds.MAX_ID {
+		rsp.Code = -10
+		return nil
+	}
+
+	if len(req.Nationality) > ds.MAX_NATIONALITY {
+		rsp.Code = -11
+		return nil
 	}
 
 	if req.UserID > 0 {

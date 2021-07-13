@@ -9,6 +9,7 @@ import (
 	"github.com/iegad/mmo/dsl/user/internal/dao/basic"
 )
 
+// RmvBasic 移除用户基础信息
 func (this_ *UserService) RmvBasic(ctx *piper.Context, req *user.RmvBasicReq, rsp *user.RmvBasicRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "RmvBasic in params is invalid")
 

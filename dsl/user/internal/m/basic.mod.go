@@ -12,20 +12,31 @@ import (
 	"github.com/iegad/mmo/dsl/user/internal/dao/basic"
 )
 
+// ModBasic 修改用户基础信息
 func (this_ *UserService) ModBasic(ctx *piper.Context, req *user.ModBasicReq, rsp *user.ModBasicRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "ModBasic in params is invalid")
 
 	if req.Basic == nil {
-		rsp.Code = -1
+		rsp.Code = -100
 		return nil
 	}
 
 	if req.Basic.Entry == nil {
-		rsp.Code = -2
+		rsp.Code = -101
+		return nil
+	}
+
+	if req.Basic.Entry.Gender < ds.MIN_GENDER || req.Basic.Entry.Gender > ds.MAX_GENDER {
+		rsp.Code = -1
 		return nil
 	}
 
 	if req.Basic.Entry.UserID <= 0 {
+		rsp.Code = -2
+		return nil
+	}
+
+	if len(req.Basic.Entry.Email) > ds.MAX_EMAIL {
 		rsp.Code = -3
 		return nil
 	}
@@ -35,23 +46,13 @@ func (this_ *UserService) ModBasic(ctx *piper.Context, req *user.ModBasicReq, rs
 		return nil
 	}
 
-	if len(req.Basic.Entry.Email) > ds.MAX_EMAIL {
+	if len(req.Basic.Entry.PhoneNum) > ds.MAX_PHONE_NUM {
 		rsp.Code = -5
 		return nil
 	}
 
-	if len(req.Basic.Entry.PhoneNum) > ds.MAX_PHONE_NUM {
-		rsp.Code = -6
-		return nil
-	}
-
-	if req.Basic.Entry.Gender < ds.MIN_GENDER || req.Basic.Entry.Gender > ds.MAX_GENDER {
-		rsp.Code = -7
-		return nil
-	}
-
 	if len(req.Basic.Entry.Avator) > ds.MAX_AVATOR {
-		rsp.Code = -8
+		rsp.Code = -6
 		return nil
 	}
 

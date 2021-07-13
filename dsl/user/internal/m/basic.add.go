@@ -13,23 +13,30 @@ import (
 	"github.com/iegad/mmo/dsl/user/internal/dao/entry"
 )
 
+// AddBasic 添加用户基础信息
+//  @Response.Code:
+//    0:         成功
+//    -1 ~ -102: 参数错误
+//    -10001:    邮箱已存在
+//    -10002:    手机号已存在
+//    -10000:    内部DB错误
 func (this_ *UserService) AddBasic(ctx *piper.Context, req *user.AddBasicReq, rsp *user.AddBasicRsp) error {
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "AddBasic in params is invalid")
 
 	for dwf := true; dwf; dwf = false {
 		// Step 1: 入参检查
 		if req.Basic == nil {
-			rsp.Code = -1
+			rsp.Code = -100
 			break
 		}
 
 		if req.Basic.Entry == nil {
-			rsp.Code = -2
+			rsp.Code = -101
 			break
 		}
 
 		if req.Basic.Entry.UserID != 0 {
-			rsp.Code = -3
+			rsp.Code = -2
 			break
 		}
 
@@ -38,32 +45,32 @@ func (this_ *UserService) AddBasic(ctx *piper.Context, req *user.AddBasicReq, rs
 		}
 
 		if req.Basic.Entry.Gender < ds.MIN_GENDER || req.Basic.Entry.Gender > ds.MAX_GENDER {
-			rsp.Code = -4
+			rsp.Code = -1
 			break
 		}
 
 		if len(req.Basic.Entry.Email) == 0 && len(req.Basic.Entry.PhoneNum) == 0 {
-			rsp.Code = -5
+			rsp.Code = -102
 			break
 		}
 
 		if len(req.Basic.Entry.Email) > 0 && len(req.Basic.Entry.Email) > ds.MAX_EMAIL {
-			rsp.Code = -6
-			break
-		}
-
-		if len(req.Basic.Entry.PhoneNum) > 0 && len(req.Basic.Entry.PhoneNum) > ds.MAX_PHONE_NUM {
-			rsp.Code = -7
+			rsp.Code = -3
 			break
 		}
 
 		if utf8.RuneCountInString(req.Basic.Entry.Nickname) > ds.MAX_NICKNAME {
-			rsp.Code = -8
+			rsp.Code = -4
+			break
+		}
+
+		if len(req.Basic.Entry.PhoneNum) > 0 && len(req.Basic.Entry.PhoneNum) > ds.MAX_PHONE_NUM {
+			rsp.Code = -5
 			break
 		}
 
 		if len(req.Basic.Entry.Avator) > ds.MAX_AVATOR {
-			rsp.Code = -9
+			rsp.Code = -6
 			break
 		}
 
@@ -77,7 +84,7 @@ func (this_ *UserService) AddBasic(ctx *piper.Context, req *user.AddBasicReq, rs
 			}
 
 			if found {
-				rsp.Code = -100
+				rsp.Code = -10001
 				break
 			}
 		}
@@ -91,7 +98,7 @@ func (this_ *UserService) AddBasic(ctx *piper.Context, req *user.AddBasicReq, rs
 			}
 
 			if found {
-				rsp.Code = -101
+				rsp.Code = -10002
 				break
 			}
 		}

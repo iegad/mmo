@@ -16,21 +16,21 @@ func (this_ *UserService) AddPersonal(ctx *piper.Context, req *user.AddPersonalR
 	utils.Assert(ctx != nil && req != nil && rsp != nil, "AddPersonal in params is invalid")
 
 	if req.Personal == nil {
+		rsp.Code = -100
+		return nil
+	}
+
+	if req.Personal.Gender != 1 && req.Personal.Gender != 2 {
 		rsp.Code = -1
 		return nil
 	}
 
 	if req.Personal.UserID <= 0 {
-		rsp.Code = -2
-		return nil
-	}
-
-	if req.Personal.Birth <= 0 {
 		rsp.Code = -3
 		return nil
 	}
 
-	if req.Personal.Gender < ds.MIN_GENDER || req.Personal.Gender > ds.MAX_GENDER {
+	if req.Personal.Birth <= 0 {
 		rsp.Code = -4
 		return nil
 	}
@@ -40,12 +40,12 @@ func (this_ *UserService) AddPersonal(ctx *piper.Context, req *user.AddPersonalR
 		return nil
 	}
 
-	if len(req.Personal.Nationality) == 0 || len(req.Personal.Nationality) > ds.MAX_NATIONALITY {
+	if len(req.Personal.ID) == 0 || len(req.Personal.ID) > ds.MAX_ID {
 		rsp.Code = -6
 		return nil
 	}
 
-	if len(req.Personal.ID) == 0 {
+	if len(req.Personal.Nationality) == 0 || len(req.Personal.Nationality) > ds.MAX_NATIONALITY {
 		rsp.Code = -7
 		return nil
 	}
