@@ -667,7 +667,7 @@ func (x *GetBasicRsp) GetBasicList() []*user.Basic {
 	return nil
 }
 
-// ----------------- Basic -----------------
+// ----------------- ArchiveLog -----------------
 type GetArchiveLogReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
