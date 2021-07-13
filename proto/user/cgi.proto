@@ -71,7 +71,7 @@ message GetBasicRsp {
   repeated user.Basic BasicList = 3;
 }
 
-// ----------------- Basic -----------------
+// ----------------- ArchiveLog -----------------
 message GetArchiveLogReq {
   user.ArchiveLogType Type           = 1;
   uint32              VerCode        = 2;
